@@ -7,7 +7,7 @@ export const tanksList: Tanks = [
         type: 'Freshwater',
         age: 21,
         imageSrc: "https://azure.wgp-cdn.co.uk/app-practicalfishkeeping/features/4e295ad82fe7f.jpg",
-        streamSrc: "http://192.168.0.6:5000/camera/livestream.m3u8",
+        streamSrc: "http://stream.jo3.io:7000/live/fish/index.m3u8",
         details: 'Deets go here my dood'
     },
     {
