@@ -31,10 +31,11 @@ export default class VideoPlayer extends Component<Props>{
 
     render() {
         return (
-            <video style={{ maxWidth: '101%' }}
+            <video style={{ maxWidth: '100%' }}
               className="videoCanvas"
               ref={this.player}
               autoPlay={true}
+              muted={true}
             />
       );
     }

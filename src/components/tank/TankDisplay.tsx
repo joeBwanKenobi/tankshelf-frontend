@@ -53,11 +53,11 @@ const useStyles = makeStyles((theme: Theme) =>
 
 
 
-export default function TankDisplay({id, name, type, age, imageSrc, streamSrc, details}: Tank) {
+export default function TankDisplay({id, name, waterType, age, image, stream, description}: Tank) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
   const ageInWeeks = age ? age / 7 : null;
-  const hasStream = streamSrc !== undefined;
+  const hasStream = stream !== undefined;
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -65,9 +65,9 @@ export default function TankDisplay({id, name, type, age, imageSrc, streamSrc, d
 
   let media;
   if (hasStream) {
-    media = <VideoPlayer source={streamSrc as string} />
+    media = <VideoPlayer source={stream as string} />
   } else {
-    media = <CardMedia className={classes.media} image={imageSrc} title={name} />
+    media = <CardMedia className={classes.media} image={image} title={name} />
   }
 
   
@@ -84,7 +84,7 @@ export default function TankDisplay({id, name, type, age, imageSrc, streamSrc, d
           </IconButton>
         }
         title={name}
-        subheader={type}
+        subheader={waterType}
       />
       {media}
       <CardContent>
@@ -97,7 +97,7 @@ export default function TankDisplay({id, name, type, age, imageSrc, streamSrc, d
         Play Stream
       </Button>
         <Typography variant="body2" color="textSecondary" component="p">
-          {`This is a ${type} tank that has been evolving for ${ageInWeeks} weeks.`}
+          {`This is a ${waterType} tank that has been evolving for ${ageInWeeks} weeks.`}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -123,7 +123,7 @@ export default function TankDisplay({id, name, type, age, imageSrc, streamSrc, d
         <CardContent>
           <Typography paragraph>Method:</Typography>
           <Typography paragraph>
-            {details}
+            {description}
           </Typography>
         </CardContent>
       </Collapse>

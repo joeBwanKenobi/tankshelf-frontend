@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function TankCard({id, name, type, age, imageSrc, streamSrc, details}: Tank) {
+export default function TankCard({id, name, waterType, age, image, stream, description}: Tank) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -64,17 +64,17 @@ export default function TankCard({id, name, type, age, imageSrc, streamSrc, deta
           </IconButton>
         }
         title={name}
-        subheader={type}
+        subheader={waterType}
       />
       <CardActionArea component={Link} to={`/tank/${id}`} >
         <CardMedia
           className={classes.media}
-          image={imageSrc}
+          image={image}
           title="Paella dish"
         />
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
-            This tanks is absolutely BONKERS, yo!
+            {description}
           </Typography>
         </CardContent>
       </CardActionArea>

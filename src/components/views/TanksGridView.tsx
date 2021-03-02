@@ -1,8 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import TankCard from '../tank/TankCard';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import { tanksList } from '../../constants/tankConstants';
 import { Grid } from '@material-ui/core';
 import { Tank } from '../../constants/tank.interface';
 
@@ -16,11 +15,28 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const Tanks = ({title}: {title: String}) => {
+export const TanksGrid = ({title}: {title: String}) => {
+    // api settings
+    const API_URL = `http://localhost:7000/api/tanks/`
+    // create state variable and function to update it
+    const [tanksList, setTanksList] = useState([]);
+    
+    useEffect(() => {
+        console.log(`effect`);
+        getList();
+    }, []);
+
+    const getList = async() => {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        setTanksList(data);
+        console.log(data);
+    } 
+    // Creates Grid item for each tank object in list
     const getTank = (tankObject: Tank) => {
         return(
             <Grid item xs={12} sm={4} >
-                <TankCard {...tankObject} />
+                <TankCard key={tankObject.id} {...tankObject} />
             </Grid>
         )
     }

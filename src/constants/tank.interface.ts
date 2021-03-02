@@ -3,9 +3,9 @@
 export interface Tank {
     id: number,
     name: string,
-    type?: string,
+    waterType?: string,
     age?: number,
-    imageSrc?: string,
-    streamSrc?: string | undefined,
-    details?: string | null,
+    image?: string,
+    stream?: string | undefined,
+    description?: string | null,
 }
