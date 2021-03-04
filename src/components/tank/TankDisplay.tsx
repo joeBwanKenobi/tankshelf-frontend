@@ -50,28 +50,27 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-
-
-
-export default function TankDisplay({id, name, waterType, age, image, stream, description}: Tank) {
+export default function TankDisplay(props: Tank) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const ageInWeeks = age ? age / 7 : null;
-  const hasStream = stream !== undefined;
+  const ageInWeeks = props.age ? props.age / 7 : null;
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  let media;
-  if (hasStream) {
-    media = <VideoPlayer source={stream as string} />
-  } else {
-    media = <CardMedia className={classes.media} image={image} title={name} />
+  function streamOrImg(stream: string | null | undefined) {
+    let media;
+    if (stream == undefined || null) {
+      console.log('no stream', stream, props.image)
+      media = <CardMedia className={classes.media} image={props.image} title={props.name} />
+    } else {
+      console.log('has stream', stream)
+      media = <VideoPlayer source={stream as string} />
+    }
+    return media;
   }
 
-  
-  
   return (
     <Card className={classes.root}>
       <CardHeader
@@ -83,21 +82,13 @@ export default function TankDisplay({id, name, waterType, age, image, stream, de
             <MoreVertIcon />
           </IconButton>
         }
-        title={name}
-        subheader={waterType}
+        title={props.name}
+        subheader={props.waterType}
       />
-      {media}
+      {streamOrImg(props.stream)}
       <CardContent>
-      <Button
-        className={classes.playButton}
-        variant="contained"
-        color="primary"
-        endIcon={<PlayArrowIcon />}
-      >
-        Play Stream
-      </Button>
         <Typography variant="body2" color="textSecondary" component="p">
-          {`This is a ${waterType} tank that has been evolving for ${ageInWeeks} weeks.`}
+          {`This is a ${props.waterType} tank that has been evolving for ${ageInWeeks} weeks.`}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
@@ -123,7 +114,7 @@ export default function TankDisplay({id, name, waterType, age, image, stream, de
         <CardContent>
           <Typography paragraph>Method:</Typography>
           <Typography paragraph>
-            {description}
+            {props.description}
           </Typography>
         </CardContent>
       </Collapse>

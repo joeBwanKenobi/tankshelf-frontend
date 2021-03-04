@@ -22,7 +22,6 @@ export const TanksGrid = ({title}: {title: String}) => {
     const [tanksList, setTanksList] = useState([]);
     
     useEffect(() => {
-        console.log(`effect`);
         getList();
     }, []);
 
@@ -30,20 +29,19 @@ export const TanksGrid = ({title}: {title: String}) => {
         const response = await fetch(API_URL);
         const data = await response.json();
         setTanksList(data);
-        console.log(data);
     } 
     // Creates Grid item for each tank object in list
     const getTank = (tankObject: Tank) => {
         return(
-            <Grid item xs={12} sm={4} >
-                <TankCard key={tankObject.id} {...tankObject} />
+            <Grid item xs={12} sm={4} key={tankObject.id} >
+                <TankCard {...tankObject} />
             </Grid>
         )
     }
     const classes = useStyles();
     return(
         <main className={classes.mainContent}>
-            <Typography className={classes.heading} variant="h1">
+            <Typography className={classes.heading} variant="h2">
                 {title}
             </Typography>
             <Grid container spacing={2}>

@@ -12,7 +12,7 @@ function App() {
         <Router>
           <Switch>
             <Route exact path="/" children={ <TanksGrid title="Tanks" />} />
-            <Route exact path="/tank/:tank" children={<TankView />} />
+            <Route exact path="/tank/:tankId" children={<TankView />} />
           </Switch>
         </Router>
       </Layout>

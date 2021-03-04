@@ -15,7 +15,6 @@ export default class VideoPlayer extends Component<Props>{
     initPlayer() {
         const video = this.player.current;
         if (video) {
-            console.log(this.props.source)
             const hls = new Hls();
             const url = this.props.source;
             hls.loadSource(url);
@@ -26,7 +25,9 @@ export default class VideoPlayer extends Component<Props>{
     }
 
     componentDidMount() {
-        this.initPlayer();
+        if (this.props.source){
+            this.initPlayer();
+        }
     }
 
     render() {

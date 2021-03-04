@@ -70,7 +70,7 @@ export default function TankCard({id, name, waterType, age, image, stream, descr
         <CardMedia
           className={classes.media}
           image={image}
-          title="Paella dish"
+          title={name}
         />
         <CardContent>
           <Typography variant="body2" color="textSecondary" component="p">
@@ -98,18 +98,9 @@ export default function TankCard({id, name, waterType, age, image, stream, descr
       </CardActions>
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Typography paragraph>Method:</Typography>
+          <Typography paragraph>Description:</Typography>
           <Typography paragraph>
-            This is a freshwater
-          </Typography>
-          <Typography paragraph>
-            Planted with cool ass plants yo!
-          </Typography>
-          <Typography paragraph>
-            Types of fish: all of em yo!
-          </Typography>
-          <Typography>
-            Weekly water changes make shit CRISP!
+            {description}
           </Typography>
         </CardContent>
       </Collapse>
