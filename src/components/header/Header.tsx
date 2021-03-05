@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,7 +35,7 @@ export default function Header() {
           <Typography variant="h6" className={classes.title}>
             TankShelf
           </Typography>
-          <Button color="inherit">Login</Button>
+          <Button color="inherit" href="/signup" >Login / Signup</Button>
         </Toolbar>
       </AppBar>
     </div>
