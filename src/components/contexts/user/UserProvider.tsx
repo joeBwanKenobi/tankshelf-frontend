@@ -1,16 +1,16 @@
 import React, { createContext, useState, useEffect } from "react";
 import * as Utils from '../../utils/utils';
 
-interface User {
+export interface User {
     display_name: string,
     email: string,
     fist_name: string,
     last_name: string
 }
 
-type ContextValue = undefined | User;
+export type UserData = undefined | User;
 
-const UserContext = createContext<ContextValue>(undefined);
+const UserContext = createContext<UserData>(undefined);
 
 const UserProvider = ({children}: {children: React.ReactNode}) => {
   const [user, setUser] = useState<User>();
