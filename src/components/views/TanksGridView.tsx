@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
 
 export const TanksGrid = ({title}: {title: String}) => {
     // api settings
-    const API_URL = `http://localhost:7000/api/tanks/`
+    const API_URL = `${process.env.REACT_APP_API_TANKS_URL}`
     // create state variable and function to update it
     const [tanksList, setTanksList] = useState([]);
     

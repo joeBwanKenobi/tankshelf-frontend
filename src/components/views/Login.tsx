@@ -46,12 +46,9 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
-  optIn: {
-    marginLeft: theme.spacing(4)
-  },
 }));
 
-export default function SignUp() {
+export default function Login() {
   const classes = useStyles();
 
   // useEffect(() => {
@@ -71,33 +68,20 @@ export default function SignUp() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign up
+          Log in
         </Typography>
         <form className={classes.form} noValidate>
           <Grid container spacing={2} direction="column" alignItems="center">
             <Grid item xs={12}>
-                <Typography component="h1" variant="h5" align="center">
-                    We currently offer account creation using your Google account.
+                <Typography component="h1" variant="h5">
+                    
                 </Typography>
             </Grid>
-            <Grid item xs={12}>
-                <GoogleButton type="register" text="Sign up with Google" />
-            </Grid>
-            {/* <Grid item xs={12}>
-              <FormControlLabel
-              className={classes.optIn}
-                control={<Checkbox value="allowExtraEmails" color="primary" />}
-                label="I want to receive inspiration, marketing promotions and updates via email."
-              />
-            </Grid> */}
-          </Grid>
-          <Grid container justify="center">
-            <Grid item>
-              <Link href="#" variant="body2">
-                Already have an account? Sign in
-              </Link>
+            <Grid container item xs={12}>
+                <GoogleButton type="login" text="Sign in with Google" />
             </Grid>
           </Grid>
+          
         </form>
       </div>
       <Box mt={5}>

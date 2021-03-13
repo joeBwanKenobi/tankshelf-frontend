@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import Grid from '@material-ui/core/Grid';
 import Header from '../components/header/Header';
+import { createMuiTheme } from '@material-ui/core';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
     return (
