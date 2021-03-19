@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import * as Utils from '../../utils/utils';
 
 export interface User {
@@ -16,8 +16,11 @@ const UserProvider = ({children}: {children: React.ReactNode}) => {
   const [user, setUser] = useState<User>();
 
   useEffect(() => {
+    console.log(`UserProvider useEffect(): `)
     Utils.getUser()
-    .then(res => setUser(res));
+    .then(res => {
+      console.log('setting user: ', res);
+      setUser(res)});
   }, []);
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { fade, makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -14,10 +14,18 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import { Icon } from '@material-ui/core';
+import { Icon, Link } from '@material-ui/core';
+import { Link as RouterLink, useHistory } from 'react-router-dom';
+import AuthContext from '../contexts/auth/AuthContext';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    linkContainer: {
+      marginRight: theme.spacing(3)
+    },
+    links: {
+      margin: theme.spacing(1, 1.5)
+    },
     grow: {
       flexGrow: 1,
     },
@@ -89,12 +97,24 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export default function PrimarySearchAppBar() {
+  // import logout function from AuthContext - passed down from App.tsx
+  const { logout } = useContext(AuthContext);
+  // use Router history for redirecting at logout
+  let history = useHistory();
+
   const classes = useStyles();
+  // Set anchor elements for opening menus
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const isMenuOpen = Boolean(anchorEl);
   const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+
+  // call logout from Authcontext then forward user to home
+  const handleLogout = () => {
+    logout();
+    history.push("/");
+  }
 
   const handleProfileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -124,8 +144,9 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem component={RouterLink} to="/user/profile">Profile</MenuItem>
+      <MenuItem onClick={handleLogout} >Logout</MenuItem>
+      {/* <MenuItem onClick={handleMenuClose}>My account</MenuItem> */}
     </Menu>
   );
 
@@ -174,14 +195,14 @@ export default function PrimarySearchAppBar() {
     <div className={classes.grow}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             edge="start"
             className={classes.menuButton}
             color="inherit"
             aria-label="open drawer"
           >
             <MenuIcon />
-          </IconButton>
+          </IconButton> */}
           <Icon className={classes.imageContainer}>
                 <img className={classes.imageIcon} src="../../assets/aquarium_light.svg" />
           </Icon>
@@ -201,7 +222,14 @@ export default function PrimarySearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </div>
+          
           <div className={classes.grow} />
+
+          <div className={classes.linkContainer}>
+            <Link href="/tanks" color="textPrimary" className={classes.links}>
+              Browse Tanks
+            </Link>
+          </div>
           <div className={classes.sectionDesktop}>
             <IconButton aria-label="show 4 new mails" color="inherit">
               <Badge badgeContent={4} color="secondary">
