@@ -1,25 +1,14 @@
 import React, { ReactNode, useContext } from 'react';
 import Grid from '@material-ui/core/Grid';
-import Header from '../components/header/Header';
 import { createMuiTheme } from '@material-ui/core';
-import AuthContext from '../components/contexts/auth/AuthContext';
-import HeaderLoggedIn from '../components/header/HeaderLoggedIn';
+import Header from '../components/header/Header';
 
 export const Layout = ({ children }: { children: ReactNode }) => {
-        const authContext = useContext(AuthContext);
-        let header;
-        console.log(authContext.isLoggedIn);
-        if(authContext.isLoggedIn) {
-            console.log(`user isLoggedIn setting logged in header`)
-            header = <HeaderLoggedIn />;
-        } else {
-            console.log(`user !isLoggedIn setting regular header`)
-            header = <Header />;
-        }
+
     return (
         <Grid container direction="column">
             <Grid item>
-                {header}
+                <Header />
             </Grid>
 
             <Grid item container>
