@@ -19,6 +19,7 @@ import { Icon, Link } from '@material-ui/core';
 import AuthContext from '../contexts/auth/AuthContext';
 import LoginOrAccount from './LoginOrAccount';
 import AccountMenu from './AccountMenu';
+import TanksMenu from './TanksMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -200,9 +201,10 @@ export default function Header() {
           <div className={classes.grow} />
 
           <div className={classes.linkContainer}>
-            <Link href="/tanks" color="textPrimary" className={classes.links}>
+            <TanksMenu />
+            {/* <Link href="/tanks" color="textPrimary" className={classes.links}>
               Browse Tanks
-            </Link>
+            </Link> */}
           </div>
           <LoginOrAccount isLoggedIn={isLoggedIn} menuId={menuId} onClick={handleProfileMenuOpen} />
           {anchorEl &&

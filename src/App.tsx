@@ -11,7 +11,10 @@ import classes from '*.module.css';
 import Home from './components/views/Home';
 import UserProvider from './components/contexts/user/UserProvider';
 import AuthContext from './components/contexts/auth/AuthContext';
+import ProtectedRoute from './components/routes/ProtectedRoute';
 import * as Utils from './components/utils/utils';
+import CreateTankView from './components/views/CreateTankView';
+import { Create } from '@material-ui/icons';
 
 
 require('dotenv').config();
@@ -62,8 +65,14 @@ function App() {
             <Route exact path="/tanks" children={<TanksGrid title="Tanks" />} />
             <Route exact path="/tank/:tankId" children={<TankView />} />
             <Route exact path="/signup" children={<SignUp />} />
-            <Route exact path="/user/profile" children={<ProfileView />} />
             <Route exact path="/login" children={<Login />} />
+            <Route exact path="/user/profile" children={<ProfileView />} />
+            <ProtectedRoute path="/tanks/create" isLoggedIn={loggedIn} >
+              <CreateTankView />
+            </ProtectedRoute>
+            <ProtectedRoute path="/user/profile" isLoggedIn={loggedIn} >
+              <CreateTankView />
+            </ProtectedRoute>
           </Layout>
         </AuthContext.Provider>
         </UserProvider>
