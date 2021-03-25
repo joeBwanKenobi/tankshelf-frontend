@@ -65,7 +65,6 @@ function App() {
             <Route exact path="/tank/:tankId" children={<TankView />} />
             <Route exact path="/signup" children={<SignUp />} />
             <Route exact path="/login" children={<Login />} />
-            {/* <Route exact path="/user/profile" children={<ProfileView />} /> */}
             <ProtectedRoute path="/tanks/create" isLoggedIn={loggedIn} >
               <CreateTankView />
             </ProtectedRoute>
