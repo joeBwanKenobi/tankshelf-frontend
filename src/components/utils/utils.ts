@@ -1,15 +1,6 @@
 import { useEffect } from 'react';
 import axios from 'axios';
 
-// export const getUser = async(): Promise<any> => {
-//     console.log(`calling ${process.env.REACT_APP_API_AUTH_URL}/user`)
-//     const response = await fetch(`${process.env.REACT_APP_API_AUTH_URL}/user`, {
-//         credentials: 'include'
-//     });
-//     console.log(response.data)
-//     return response;
-// }
-
 // Returns a user object from api or null if response is 401
 export const getUser = async(): Promise<any> => {
     console.log(`calling ${process.env.REACT_APP_API_AUTH_URL}/user`);
@@ -20,9 +11,10 @@ export const getUser = async(): Promise<any> => {
         console.log(res)
         return res.data;
     }).catch(e => {
-        if (e.response.status === 401) {
-            return undefined;
-        }
+        // if (e.response.status === 401) {
+        //     // return undefined;
+        //     // console.log(undefined)
+        // }
     });
 
     return user;

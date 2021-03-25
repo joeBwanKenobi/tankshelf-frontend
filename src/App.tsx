@@ -14,7 +14,6 @@ import AuthContext from './components/contexts/auth/AuthContext';
 import ProtectedRoute from './components/routes/ProtectedRoute';
 import * as Utils from './components/utils/utils';
 import CreateTankView from './components/views/CreateTankView';
-import { Create } from '@material-ui/icons';
 
 
 require('dotenv').config();
