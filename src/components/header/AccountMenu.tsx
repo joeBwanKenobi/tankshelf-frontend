@@ -21,10 +21,11 @@ const AccountMenu = (props: { anchorEl: Element, menuId: string, onClose: MouseE
     return (
         <Menu
         anchorEl={props.anchorEl}
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        getContentAnchorEl={null}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
         id={props.menuId}
         keepMounted
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
         open={isMenuOpen}
         onClose={props.onClose}
         >
