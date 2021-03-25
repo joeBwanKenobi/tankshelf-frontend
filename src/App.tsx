@@ -65,12 +65,12 @@ function App() {
             <Route exact path="/tank/:tankId" children={<TankView />} />
             <Route exact path="/signup" children={<SignUp />} />
             <Route exact path="/login" children={<Login />} />
-            <Route exact path="/user/profile" children={<ProfileView />} />
+            {/* <Route exact path="/user/profile" children={<ProfileView />} /> */}
             <ProtectedRoute path="/tanks/create" isLoggedIn={loggedIn} >
               <CreateTankView />
             </ProtectedRoute>
             <ProtectedRoute path="/user/profile" isLoggedIn={loggedIn} >
-              <CreateTankView />
+              <ProfileView />
             </ProtectedRoute>
           </Layout>
         </AuthContext.Provider>
