@@ -13,7 +13,7 @@ import UserProvider from './components/contexts/user/UserProvider';
 import AuthContext from './components/contexts/auth/AuthContext';
 import ProtectedRoute from './components/routes/ProtectedRoute';
 import * as Utils from './components/utils/utils';
-import CreateTankView from './components/views/CreateTankView';
+import CreateTankView from './components/views/createTank/CreateTankView';
 
 
 require('dotenv').config();

@@ -11,10 +11,9 @@ export const getUser = async(): Promise<any> => {
         console.log(res)
         return res.data;
     }).catch(e => {
-        // if (e.response.status === 401) {
-        //     // return undefined;
-        //     // console.log(undefined)
-        // }
+        if (e.response.status === 401) {
+            return undefined;
+        }
     });
 
     return user;
