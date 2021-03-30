@@ -25,12 +25,45 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const TankMedia = ({handleChange, values}: {handleChange: Function, values: State}) => {
-        const classes = useStyles();
+    const classes = useStyles();
+    const [images, setImages] = useState<any[]>([]);
+
+    // const displayImage = (file: File) => {
+    //     const reader = new FileReader();
+    //     reader.onload = function(e) {
+    //         const imageEl = document.getElementById('image') as HTMLImageElement;
+    //         if (imageEl !== null && e.target !== null) {
+    //             imageEl.src = e.target.result as string;
+    //         }
+    //     }
+    //     // const image = reader.readAsDataURL(file).result;
+    //     // const imageEl = document.getElementById('image') as HTMLImageElement;
+        
+    // }
+
+    const handleFileAdd = (e: ChangeEvent) => {
+        const target = e.target as HTMLInputElement;
+        const files = target.files as FileList;
+        
+        // Using URL.createObjectURL
+        if (files && files[0]) {
+            setImages(images => [...images, URL.createObjectURL(files[0])]);
+        }
+
+        // Using FileReader
+        // if (target.files && target.files[0]) {
+        //     let reader = new FileReader();
+        //     reader.onload = (e) => {
+        //         setImages(images => [...images, e.target?.result]);
+        //     }
+        //     reader.readAsDataURL(target.files[0]);
+        // } 
+    }
 
     return(
         <form className={classes.form}>
             <div>
-            <TextField 
+            {/* <TextField 
                 label="Tank Image"
                 id="tankImage"
                 defaultValue=""
@@ -39,7 +72,9 @@ const TankMedia = ({handleChange, values}: {handleChange: Function, values: Stat
                 fullWidth
                 onChange={handleChange('image')}
                 
-            />
+            /> */}
+            <img id="image" src={images[0]} />
+            <input type="file" id="image" multiple onChange={handleFileAdd}></input>
             </div>
         </form>
     )

@@ -12,8 +12,13 @@ export const getUser = async(): Promise<any> => {
         console.log(res)
         return res.data;
     }).catch(e => {
-        if (e.response.status === 401) {
-            return undefined;
+        if (e.response) {
+            if (e.response.status === 401) {
+                return undefined;
+            } 
+        }
+        else {
+            return 'API Server not available'
         }
     });
 
