@@ -12,6 +12,7 @@ import Stepper from '@material-ui/core/Stepper';
 import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
+import * as Utils from '../../utils/utils';
 
 
 const styles = (theme: Theme) => createStyles(({
@@ -35,14 +36,18 @@ const styles = (theme: Theme) => createStyles(({
     },
 }));
 
-interface Props extends WithStyles<typeof styles> { };
+interface Props extends WithStyles<typeof styles> {};
+
 export interface State {
     activeStep: number;
     name: string;
     type: "Freshwater" | "Saltwater" | "Terrarium" | "";
     age: any;
     description: string;
+    image: string;
 }
+
+export type NewTank = Pick<State, "name" | "age" | "description" | "type" | "image">;
 
 const steps = ['Details', 'Contents', 'Media'];
 
@@ -54,10 +59,9 @@ class CreateTankView extends Component<Props, State> {
             name: "",
             type: "",
             age: null,
-            description: ""
+            description: "",
+            image: ""
         }
-
-        // this.handleChange = this.handleChange.bind(this);
     }
 
     handleNext = () => {
@@ -68,6 +72,8 @@ class CreateTankView extends Component<Props, State> {
         this.setState({ activeStep: this.state.activeStep - 1 });
     };
 
+    // handleChange gets passed to child components in the form to update the state of this master CreateTankView component.
+    // This allows pagination through the stepper with the ability to retain values in state
     handleChange = (input: keyof State) => (e: SyntheticEvent) => {
         const target = e.target as HTMLInputElement;
         console.log(target.value, input)
@@ -80,14 +86,15 @@ class CreateTankView extends Component<Props, State> {
     handleSubmit = (e: SyntheticEvent) => {
         e.preventDefault();
         console.log('adding following state to databse');
-        const newTank = {
+        const newTank: NewTank = {
             name: this.state.name,
             description: this.state.description,
-            waterType: this.state.type,
-            // image:  this.state.image,
-            age: this.state.age
+            type: this.state.type,
+            image:  this.state.image,
+            age: Date.parse(this.state.age)
         }
         console.log(newTank);
+        Utils.addTank(newTank);
     }
 
     getStepContent = (step: number, handleChange: Function, values: State) => {
@@ -95,9 +102,9 @@ class CreateTankView extends Component<Props, State> {
             case 0:
                 return <TankDetails handleChange={handleChange} values={values} />;
             case 1:
-                return <TankContents />;
+                return <TankContents handleChange={handleChange} values={values} />;
             case 2:
-                return <TankMedia />;
+                return <TankMedia handleChange={handleChange} values={values} />;
         }
     }
 

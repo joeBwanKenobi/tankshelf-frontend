@@ -19,6 +19,7 @@ import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import { Tank } from '../../constants/tank.interface';
 import { Button, Icon } from '@material-ui/core';
 import VideoPlayer from '../media/VideoPlayer';
+import * as Utils from '../utils/utils';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -53,7 +54,7 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function TankDisplay(props: Tank) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
-  const ageInWeeks = props.age ? props.age / 7 : null;
+  const ageInWeeks = props.age ? Math.round(Utils.ageInDays(props.age) / 7) : null;
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -83,12 +84,12 @@ export default function TankDisplay(props: Tank) {
           </IconButton>
         }
         title={props.name}
-        subheader={props.waterType}
+        subheader={props.type}
       />
       {streamOrImg(props.stream)}
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
-          {`This is a ${props.waterType} tank that has been evolving for ${ageInWeeks} weeks.`}
+          {`This is a ${props.type} tank that has been evolving for ${ageInWeeks} weeks.`}
         </Typography>
       </CardContent>
       <CardActions disableSpacing>
