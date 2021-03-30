@@ -75,7 +75,19 @@ class CreateTankView extends Component<Props, State> {
             ...state,    
             [input]: target.value 
         }));
-        
+    }
+
+    handleSubmit = (e: SyntheticEvent) => {
+        e.preventDefault();
+        console.log('adding following state to databse');
+        const newTank = {
+            name: this.state.name,
+            description: this.state.description,
+            waterType: this.state.type,
+            // image:  this.state.image,
+            age: this.state.age
+        }
+        console.log(newTank);
     }
 
     getStepContent = (step: number, handleChange: Function, values: State) => {
@@ -129,7 +141,7 @@ class CreateTankView extends Component<Props, State> {
                                     <Button
                                         variant="contained"
                                         color="primary"
-                                        onClick={this.handleNext}
+                                        onClick={this.state.activeStep === steps.length - 1 ? this.handleSubmit : this.handleNext}
                                         className={classes.button}
                                     >
                                         {this.state.activeStep === steps.length - 1 ? 'Add Tank' : 'Next'}

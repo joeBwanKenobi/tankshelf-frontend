@@ -25,12 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const TankDetails = ({handleChange, values}: {handleChange: Function, values: State}) => {
-    const [type, setType] = useState("");
-    const classes = useStyles();
-
-    const handleTypeChange = (event: ChangeEvent<{ value: unknown }>) => {
-        setType(event.target.value as string);
-    }
+        const classes = useStyles();
 
     return(
         <form className={classes.form}>
@@ -53,11 +48,8 @@ const TankDetails = ({handleChange, values}: {handleChange: Function, values: St
                     labelId="type-label"
                     id="type"
                     label="Type"
-                    value={type}
-                    onChange={(e) => {
-                        handleTypeChange(e);
-                        handleChange('type');
-                    }}
+                    value={values.type}
+                    onChange={handleChange('type')}
                     autoWidth
                 >
                     <MenuItem value={"Freshwater"}>
