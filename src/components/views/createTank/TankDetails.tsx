@@ -6,7 +6,7 @@ import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import makeStyles from '@material-ui/styles/makeStyles';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import classes from '*.module.css';
+import { State } from './CreateTankView';
 
 const useStyles = makeStyles((theme: Theme) => ({
     form: {
@@ -24,13 +24,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const TankDetails = ({handleChange, values}: {handleChange: Function, values: object}) => {
+const TankDetails = ({handleChange, values}: {handleChange: Function, values: State}) => {
     const [type, setType] = useState("");
     const classes = useStyles();
 
-    // const handleChange = (event: ChangeEvent<{ value: unknown }>) => {
-    //     setType(event.target.value as string);
-    // }
+    const handleTypeChange = (event: ChangeEvent<{ value: unknown }>) => {
+        setType(event.target.value as string);
+    }
 
     return(
         <form className={classes.form}>
@@ -39,6 +39,7 @@ const TankDetails = ({handleChange, values}: {handleChange: Function, values: ob
                 label="Tank Name"
                 id="tankName"
                 defaultValue=""
+                value={values.name}
                 variant="outlined"
                 fullWidth
                 onChange={handleChange('name')}
@@ -53,9 +54,11 @@ const TankDetails = ({handleChange, values}: {handleChange: Function, values: ob
                     id="type"
                     label="Type"
                     value={type}
-                    onChange={handleChange('type')}
+                    onChange={(e) => {
+                        handleTypeChange(e);
+                        handleChange('type');
+                    }}
                     autoWidth
-                    
                 >
                     <MenuItem value={"Freshwater"}>
                         Freshwater
@@ -68,6 +71,7 @@ const TankDetails = ({handleChange, values}: {handleChange: Function, values: ob
                     </MenuItem>
                 </Select>
                 </FormControl>
+
                 <TextField 
                 label="When did you start this tank?"
                 id="age"
@@ -79,6 +83,8 @@ const TankDetails = ({handleChange, values}: {handleChange: Function, values: ob
                     shrink: true,
                 }}
                 className={classes.formControl}
+                onChange={handleChange('age')}
+                value={values.age}
                 />
             </div>
             <TextField
@@ -89,6 +95,8 @@ const TankDetails = ({handleChange, values}: {handleChange: Function, values: ob
                 rows={5}
                 defaultValue="Is there anything you'd like to let people know about this tank?  You will be asked to add types of fish and plants in a following step."
                 variant="outlined"
+                onChange={handleChange('description')}
+                value={values.description}
             />
         </form>
     )

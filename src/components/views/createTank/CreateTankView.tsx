@@ -1,7 +1,8 @@
+// import { MouseEvent } from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
-import { useState, Fragment, Component } from 'react';
+import { useState, Fragment, Component, SyntheticEvent } from 'react';
 import { Theme } from '@material-ui/core/styles';
 import TankContents from './TankContents';
 import TankDetails from './TankDetails';
@@ -35,7 +36,7 @@ const styles = (theme: Theme) => createStyles(({
 }));
 
 interface Props extends WithStyles<typeof styles> { };
-interface State {
+export interface State {
     activeStep: number;
     name: string;
     type: "Freshwater" | "Saltwater" | "Terrarium" | "";
@@ -67,13 +68,17 @@ class CreateTankView extends Component<Props, State> {
         this.setState({ activeStep: this.state.activeStep - 1 });
     };
 
-    handleChange = (input: string) => (e: MouseEvent) => {
-        console.log('change')
-        console.log(e)
-        // this.setState({  })
+    handleChange = (input: keyof State) => (e: SyntheticEvent) => {
+        const target = e.target as HTMLInputElement;
+        console.log(target.value, input)
+        this.setState(state => ({
+            ...state,    
+            [input]: target.value 
+        }));
+        
     }
 
-    getStepContent = (step: number, handleChange: Function, values: object) => {
+    getStepContent = (step: number, handleChange: Function, values: State) => {
         switch (step) {
             case 0:
                 return <TankDetails handleChange={handleChange} values={values} />;
@@ -87,7 +92,7 @@ class CreateTankView extends Component<Props, State> {
     render() {
         const { classes } = this.props;
         const { name, type, age, description } = this.state;
-        const values = { name, type, age, description };
+        const values = { name, type, age, description } as State;
 
         return (
             <Container maxWidth="lg" className={classes.mainContent}>
