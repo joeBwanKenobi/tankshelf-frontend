@@ -20,6 +20,7 @@ import { Tank } from '../../constants/tank.interface';
 import { Button, Icon } from '@material-ui/core';
 import VideoPlayer from '../media/VideoPlayer';
 import * as Utils from '../utils/utils';
+import { LocalPrintshopSharp } from '@material-ui/icons';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -56,6 +57,10 @@ export default function TankDisplay(props: Tank) {
   const [expanded, setExpanded] = React.useState(false);
   const ageInWeeks = props.age ? Math.round(Utils.ageInDays(props.age) / 7) : null;
 
+  console.log(props)
+  console.log(props.images)
+  console.log(props.images[0]?.url)
+
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -63,8 +68,8 @@ export default function TankDisplay(props: Tank) {
   function streamOrImg(stream: string | null | undefined) {
     let media;
     if (stream == undefined || null) {
-      console.log('no stream', stream, props.image)
-      media = <CardMedia className={classes.media} image={props.image} title={props.name} />
+      // console.log('no stream', stream, props.images[0].url)
+      media = <CardMedia className={classes.media} image={`http://tankshelf.local${props.images[0]?.url}`} title={props.name} />
     } else {
       console.log('has stream', stream)
       media = <VideoPlayer source={stream as string} />

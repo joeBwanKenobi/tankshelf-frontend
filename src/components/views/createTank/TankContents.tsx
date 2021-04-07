@@ -34,10 +34,10 @@ const TankContents = ({handleChange, values}: {handleChange: Function, values: S
                 label="Tank Contents"
                 id="tankContents"
                 defaultValue=""
-                value={values.image}
+                value={values.images}
                 variant="outlined"
                 fullWidth
-                onChange={handleChange('image')}
+                onChange={handleChange('images')}
                 
             />
             </div>

@@ -1,9 +1,11 @@
-import { ChangeEvent, useState } from 'react';
-import TextField from '@material-ui/core/TextField'
-import FormControl from '@material-ui/core/FormControl'
-import InputLabel from '@material-ui/core/InputLabel'
-import Select from '@material-ui/core/Select'
-import MenuItem from '@material-ui/core/MenuItem'
+import { ChangeEvent, ChangeEventHandler, useState } from 'react';
+import Input from '@material-ui/core/Input';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
 import makeStyles from '@material-ui/styles/makeStyles';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { State } from './CreateTankView';
@@ -21,60 +23,52 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     typeControl: {
         paddingRight: theme.spacing(2)
+    },
+    addedMedia: {
+        width: '100%',
+        padding: theme.spacing(1, 1, 1),
+        border: "1px solid gold"
+    },
+    mediaContainer: {
+        padding: theme.spacing(4, 0, 0)
+    },
+    imageInput: {
+        display: "none"
     }
 }));
 
-const TankMedia = ({handleChange, values}: {handleChange: Function, values: State}) => {
+const TankMedia = ({ handleImageAdd, values }: { handleImageAdd: ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>, values: State }) => {
     const classes = useStyles();
-    const [images, setImages] = useState<any[]>([]);
 
-    // const displayImage = (file: File) => {
-    //     const reader = new FileReader();
-    //     reader.onload = function(e) {
-    //         const imageEl = document.getElementById('image') as HTMLImageElement;
-    //         if (imageEl !== null && e.target !== null) {
-    //             imageEl.src = e.target.result as string;
-    //         }
-    //     }
-    //     // const image = reader.readAsDataURL(file).result;
-    //     // const imageEl = document.getElementById('image') as HTMLImageElement;
-        
-    // }
-
-    const handleFileAdd = (e: ChangeEvent) => {
-        const target = e.target as HTMLInputElement;
-        const files = target.files as FileList;
-        
-        // Using URL.createObjectURL
-        if (files && files[0]) {
-            setImages(images => [...images, URL.createObjectURL(files[0])]);
-        }
-
-        // Using FileReader
-        // if (target.files && target.files[0]) {
-        //     let reader = new FileReader();
-        //     reader.onload = (e) => {
-        //         setImages(images => [...images, e.target?.result]);
-        //     }
-        //     reader.readAsDataURL(target.files[0]);
-        // } 
+    const displayImage = (image: any) => {
+        console.log('displayImage()')
+        console.log(image.name);
+        const imageSrc = URL.createObjectURL(image);
+        return (
+            <Grid item xs={4} key={image.name}>
+                <img className={classes.addedMedia} src={imageSrc} />
+            </Grid>
+        )
     }
 
-    return(
+    return (
         <form className={classes.form}>
             <div>
-            {/* <TextField 
-                label="Tank Image"
-                id="tankImage"
-                defaultValue=""
-                value={values.image}
-                variant="outlined"
-                fullWidth
-                onChange={handleChange('image')}
-                
-            /> */}
-            <img id="image" src={images[0]} />
-            <input type="file" id="image" multiple onChange={handleFileAdd}></input>
+                <input
+                    className={classes.imageInput}
+                    id="image-input-hidden"
+                    onChange={handleImageAdd}
+                    type="file"
+                    multiple
+                />
+                <label htmlFor="image-input-hidden">
+                    <Button variant="contained" color="primary" component="span">
+                        Add Image
+                </Button>
+                </label>
+                <Grid container direction="row" justify="flex-start" alignItems="center" className={classes.mediaContainer} spacing={1}>
+                    {values.images ? values.images.map(image => displayImage(image)) : ""}
+                </Grid>
             </div>
         </form>
     )

@@ -28,6 +28,7 @@ export const TanksGrid = ({title}: {title: String}) => {
     const getList = async() => {
         const response = await fetch(API_URL);
         const data = await response.json();
+        console.log(data)
         setTanksList(data);
     } 
     // Creates Grid item for each tank object in list

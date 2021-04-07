@@ -1,4 +1,4 @@
-// import { MouseEvent } from 'react';
+import { ChangeEvent } from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
@@ -13,6 +13,7 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import * as Utils from '../../utils/utils';
+import axios from 'axios';
 
 
 const styles = (theme: Theme) => createStyles(({
@@ -44,10 +45,11 @@ export interface State {
     type: "Freshwater" | "Saltwater" | "Terrarium" | "";
     age: any;
     description: string;
-    image: string;
+    images: any[];
 }
 
-export type NewTank = Pick<State, "name" | "age" | "description" | "type" | "image">;
+// Type with specific attributes from State Interface
+export type NewTank = Pick<State, "name" | "age" | "description" | "type" | "images">;
 
 const steps = ['Details', 'Contents', 'Media'];
 
@@ -60,7 +62,7 @@ class CreateTankView extends Component<Props, State> {
             type: "",
             age: null,
             description: "",
-            image: ""
+            images: []
         }
     }
 
@@ -79,39 +81,72 @@ class CreateTankView extends Component<Props, State> {
         console.log(target.value, input)
         this.setState(state => ({
             ...state,    
-            [input]: target.value 
+            [input]: target.value // handleChange('name') would update the state value for the 'name' entry
         }));
     }
 
-    handleSubmit = (e: SyntheticEvent) => {
+    handleImageAdd = (e: ChangeEvent) => {
+        const target = e.target as HTMLInputElement;
+        const files = target.files as FileList;
+        const filesForState: any[] = []
+
+        for (let i=0; i < files.length; i++) {
+            filesForState.push(files[i])
+        }
+
+        this.setState(state => ({
+            ...state,
+            images: [
+                ...this.state.images,
+                ...filesForState
+            ]
+        }));
+    }
+
+    handleSubmit = async(e: SyntheticEvent) => {
         e.preventDefault();
         console.log('adding following state to databse');
+        console.log(this.state.images)
         const newTank: NewTank = {
             name: this.state.name,
             description: this.state.description,
             type: this.state.type,
-            image:  this.state.image,
+            images:  this.state.images,
             age: Date.parse(this.state.age)
         }
-        console.log(newTank);
-        Utils.addTank(newTank);
+
+        // Create multipart formdata to upload images
+        const imagesFormData = new FormData();
+        // add each image stored in state to formdata
+        this.state.images.forEach(image => {
+            imagesFormData.append(image.name, image);
+        });
+
+        // Utils.uploadImages(imagesFormData);
+
+        // console.log(newTank);
+        Utils.addTank(newTank)
+        .then(res => {
+            imagesFormData.append('tankID', res.id);
+            Utils.uploadImages(imagesFormData, res.id);
+        }).catch(e => console.error(e));
     }
 
-    getStepContent = (step: number, handleChange: Function, values: State) => {
+    getStepContent = (step: number, values: State) => {
         switch (step) {
             case 0:
-                return <TankDetails handleChange={handleChange} values={values} />;
+                return <TankDetails handleChange={this.handleChange} values={values} />;
             case 1:
-                return <TankContents handleChange={handleChange} values={values} />;
+                return <TankContents handleChange={this.handleChange} values={values} />;
             case 2:
-                return <TankMedia handleChange={handleChange} values={values} />;
+                return <TankMedia handleImageAdd={this.handleImageAdd} values={values} />;
         }
     }
 
     render() {
         const { classes } = this.props;
-        const { name, type, age, description } = this.state;
-        const values = { name, type, age, description } as State;
+        const { name, type, age, description, images } = this.state;
+        const values = { name, type, age, description, images } as State;
 
         return (
             <Container maxWidth="lg" className={classes.mainContent}>
@@ -138,7 +173,7 @@ class CreateTankView extends Component<Props, State> {
 
                         ) : (
                             <Fragment>
-                                {this.getStepContent(this.state.activeStep, this.handleChange, values)}
+                                {this.getStepContent(this.state.activeStep, values)}
                                 <div className={classes.buttons}>
                                     {this.state.activeStep !== 0 && (
                                         <Button onClick={this.handleBack} className={classes.button}>
