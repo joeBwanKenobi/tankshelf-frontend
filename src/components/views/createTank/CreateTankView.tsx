@@ -66,6 +66,22 @@ class CreateTankView extends Component<Props, State> {
         }
     }
 
+    buildFormData = () => {
+        const tankFormData = new FormData();
+        Object.entries(this.state).map(([key, value]) => {
+            if (key === 'images') {
+                this.state.images.forEach(image => {
+                    console.log(`adding ${image.name}: ${image}`)
+                    tankFormData.append(image.name, image);
+                });
+            } else {
+                console.log(`adding ${key}: ${value}`)
+                tankFormData.append(key, value);
+            }
+        });
+        return tankFormData;
+    }
+
     handleNext = () => {
         this.setState({ activeStep: this.state.activeStep + 1 });
     };
@@ -81,7 +97,7 @@ class CreateTankView extends Component<Props, State> {
         console.log(target.value, input)
         this.setState(state => ({
             ...state,    
-            [input]: target.value // handleChange('name') would update the state value for the 'name' entry
+            [input]: input === 'age' ? Date.parse(target.value) : target.value // handleChange('name') would update the state value for the 'name' entry
         }));
     }
 
@@ -106,7 +122,6 @@ class CreateTankView extends Component<Props, State> {
     handleSubmit = async(e: SyntheticEvent) => {
         e.preventDefault();
         console.log('adding following state to databse');
-        console.log(this.state.images)
         const newTank: NewTank = {
             name: this.state.name,
             description: this.state.description,
@@ -115,6 +130,9 @@ class CreateTankView extends Component<Props, State> {
             age: Date.parse(this.state.age)
         }
 
+        const form = this.buildFormData();
+        form.forEach(data => console.log(data));
+
         // Create multipart formdata to upload images
         const imagesFormData = new FormData();
         // add each image stored in state to formdata
@@ -122,14 +140,14 @@ class CreateTankView extends Component<Props, State> {
             imagesFormData.append(image.name, image);
         });
 
-        // Utils.uploadImages(imagesFormData);
-
-        // console.log(newTank);
-        Utils.addTank(newTank)
-        .then(res => {
-            imagesFormData.append('tankID', res.id);
-            Utils.uploadImages(imagesFormData, res.id);
-        }).catch(e => console.error(e));
+        imagesFormData.forEach(data => console.log(data));
+        
+        Utils.addTank(form);
+        // Utils.addTank(newTank)
+        // .then(res => {
+        //     imagesFormData.append('tankID', res.id);
+        //     Utils.uploadImages(imagesFormData, res.id);
+        // }).catch(e => console.error(e));
     }
 
     getStepContent = (step: number, values: State) => {

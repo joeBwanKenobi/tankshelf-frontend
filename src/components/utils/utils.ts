@@ -41,11 +41,13 @@ export const logOut = async (): Promise<any> => {
     return loggedOut;
 }
 
-export const addTank = async (tankDetails: NewTank): Promise<any> => {
+export const addTank = async (tankDetails: FormData): Promise<any> => {
     console.log(`calling POST ${process.env.REACT_APP_API_TANKS_URL}/addTank`);
-    const newTank = await axios.post(`${process.env.REACT_APP_API_TANKS_URL}/addTank`, {
-        data: tankDetails
-    })
+    const newTank = await axios.post(`${process.env.REACT_APP_API_TANKS_URL}/addTank`, tankDetails, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
 
     return newTank.data;
 }
