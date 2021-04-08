@@ -1,7 +1,7 @@
 // src/constants/tank.interface.ts
 
 export interface Tank {
-    id: number;
+    tankID: number;
     name: string;
     type?: string;
     age?: number; // This will be a number value from Date() object
@@ -9,4 +9,5 @@ export interface Tank {
     images: any[];
     stream?: string | undefined;
     description?: string | null;
+    url?: string | null;
 }

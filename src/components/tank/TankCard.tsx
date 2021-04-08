@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-export default function TankCard({id, name, type, age, image, stream, description}: Tank) {
+export default function TankCard({tankID, name, type, age, image, stream, description, url}: Tank) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
 
@@ -66,10 +66,10 @@ export default function TankCard({id, name, type, age, image, stream, descriptio
         title={name}
         subheader={type}
       />
-      <CardActionArea component={Link} to={`/tank/${id}`} >
+      <CardActionArea component={Link} to={`/tank/${tankID}`} >
         <CardMedia
           className={classes.media}
-          image={image}
+          image={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${url}`}
           title={name}
         />
         <CardContent>

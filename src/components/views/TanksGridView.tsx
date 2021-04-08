@@ -34,7 +34,7 @@ export const TanksGrid = ({title}: {title: String}) => {
     // Creates Grid item for each tank object in list
     const getTank = (tankObject: Tank) => {
         return(
-            <Grid item xs={12} sm={4} key={tankObject.id} >
+            <Grid item xs={12} sm={4} key={tankObject.tankID} >
                 <TankCard {...tankObject} />
             </Grid>
         )

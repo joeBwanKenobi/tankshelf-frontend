@@ -69,7 +69,7 @@ export default function TankDisplay(props: Tank) {
     let media;
     if (stream == undefined || null) {
       // console.log('no stream', stream, props.images[0].url)
-      media = <CardMedia className={classes.media} image={`http://tankshelf.local${props.images[0]?.url}`} title={props.name} />
+      media = <CardMedia className={classes.media} image={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${props.images[0]?.url}`} title={props.name} />
     } else {
       console.log('has stream', stream)
       media = <VideoPlayer source={stream as string} />

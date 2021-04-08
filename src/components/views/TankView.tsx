@@ -49,6 +49,8 @@ export const TankView = () => {
         })
         .then(res => res.json())
         .then(res => {
+            console.log('getImages(): ')
+            console.log(res);
             setTankImages(res);
         }).catch(e => console.error(e));
     }
