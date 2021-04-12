@@ -28,12 +28,13 @@ export const TanksGrid = ({title}: {title: String}) => {
     const getList = async() => {
         const response = await fetch(API_URL);
         const data = await response.json();
+        console.log(data)
         setTanksList(data);
     } 
     // Creates Grid item for each tank object in list
     const getTank = (tankObject: Tank) => {
         return(
-            <Grid item xs={12} sm={4} key={tankObject.id} >
+            <Grid item xs={12} sm={4} key={tankObject.tankID} >
                 <TankCard {...tankObject} />
             </Grid>
         )
