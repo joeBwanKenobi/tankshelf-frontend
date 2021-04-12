@@ -2,10 +2,11 @@ import React, { createContext, useState, useEffect, useContext } from "react";
 import * as Utils from '../../utils/utils';
 
 export interface User {
-    display_name: string,
-    email: string,
-    fist_name: string,
-    last_name: string
+    userID: string;
+    display_name: string;
+    email: string;
+    fist_name: string;
+    last_name: string;
 }
 
 export type UserData = undefined | User;

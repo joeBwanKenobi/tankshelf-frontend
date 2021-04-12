@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
 import Card from '@material-ui/core/Card';
@@ -57,25 +57,25 @@ export default function TankDisplay(props: Tank) {
   const [expanded, setExpanded] = React.useState(false);
   const ageInWeeks = props.age ? Math.round(Utils.ageInDays(props.age) / 7) : null;
 
-  console.log(props)
-  console.log(props.images)
-  console.log(props.images[0]?.url)
-
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
 
-  function streamOrImg(stream: string | null | undefined) {
-    let media;
-    if (stream == undefined || null) {
-      // console.log('no stream', stream, props.images[0].url)
-      media = <CardMedia className={classes.media} image={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${props.images[0]?.url}`} title={props.name} />
-    } else {
-      console.log('has stream', stream)
-      media = <VideoPlayer source={stream as string} />
-    }
-    return media;
-  }
+  // const streamOrImg = (stream: string | null | undefined) => {
+  //   let media;
+  //   if(props.images[0]?.url === undefined) { return; }
+  //   if (stream === undefined || null) {
+  //     console.log('calling for iamge in streamOrImg():')
+  //     console.log(props.images);
+  //     console.log(`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${props.images[0]?.url}`)
+  //     media = <CardMedia className={classes.media} image={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${props.images[0]?.url}`} title={props.name} />
+  //   } else {
+  //     console.log('has stream', stream)
+  //     media = <VideoPlayer source={stream as string} />
+  //   }
+  //   return media;
+  // }
+
 
   return (
     <Card className={classes.root}>
@@ -91,7 +91,7 @@ export default function TankDisplay(props: Tank) {
         title={props.name}
         subheader={props.type}
       />
-      {streamOrImg(props.stream)}
+      <CardMedia className={classes.media} image={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${props.images[0]?.url}`} title={props.name} />
       <CardContent>
         <Typography variant="body2" color="textSecondary" component="p">
           {`This is a ${props.type} tank that has been evolving for ${ageInWeeks} weeks.`}

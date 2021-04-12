@@ -1,6 +1,5 @@
 import { useEffect } from 'react';
 import axios from 'axios';
-import { NewTank } from '../views/createTank/CreateTankView';
 
 // Returns a user object from api or null if response is 401
 export const getUser = async (): Promise<any> => {
@@ -44,6 +43,7 @@ export const logOut = async (): Promise<any> => {
 export const addTank = async (tankDetails: FormData): Promise<any> => {
     console.log(`calling POST ${process.env.REACT_APP_API_TANKS_URL}/addTank`);
     const newTank = await axios.post(`${process.env.REACT_APP_API_TANKS_URL}/addTank`, tankDetails, {
+        withCredentials: true,
         headers: {
             'Content-Type': 'multipart/form-data'
         }
@@ -62,6 +62,11 @@ export const ageInDays = (firstDate: number) => {
     const differenceInDays = Math.ceil(differenceInMs / MS_IN_A_DAY);
 
     return differenceInDays;
+}
+
+export const formatDate = (age: number) => {
+    let date = new Date(age).toISOString().slice(0, 10);
+    return date;
 }
 
 export const uploadImages = async (formData: FormData, id: string) => {

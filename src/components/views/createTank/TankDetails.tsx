@@ -7,6 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import makeStyles from '@material-ui/styles/makeStyles';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { State } from './CreateTankView';
+import * as Utils from '../../utils/utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
     form: {
@@ -24,59 +25,64 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const TankDetails = ({handleChange, values}: {handleChange: Function, values: State}) => {
-        const classes = useStyles();
+const TankDetails = ({ handleChange, values }: { handleChange: Function, values: State }) => {
+    const classes = useStyles();
+    if (values.age === null) {
+        values.age = new Date().toISOString().slice(0, 10);
+    }
+    let formatDate = Utils.formatDate(values.age);
+    console.log(formatDate)
 
-    return(
+    return (
         <form className={classes.form}>
             <div>
-            <TextField 
-                label="Tank Name"
-                id="tankName"
-                defaultValue=""
-                value={values.name}
-                variant="outlined"
-                fullWidth
-                onChange={handleChange('name')}
-                
-            />
+                <TextField
+                    label="Tank Name"
+                    id="tankName"
+                    defaultValue=""
+                    value={values.name}
+                    variant="outlined"
+                    fullWidth
+                    onChange={handleChange('name')}
+
+                />
             </div>
             <div>
                 <FormControl variant="outlined" className={`${classes.formControl} ${classes.typeControl}`}>
                     <InputLabel id="type-label">Type</InputLabel>
-                <Select
-                    labelId="type-label"
-                    id="type"
-                    label="Type"
-                    value={values.type}
-                    onChange={handleChange('type')}
-                    autoWidth
-                >
-                    <MenuItem value={"Freshwater"}>
-                        Freshwater
+                    <Select
+                        labelId="type-label"
+                        id="type"
+                        label="Type"
+                        value={values.type}
+                        onChange={handleChange('type')}
+                        autoWidth
+                    >
+                        <MenuItem value={"Freshwater"}>
+                            Freshwater
                     </MenuItem>
-                    <MenuItem value={"Saltwater"}>
-                        Saltwater
+                        <MenuItem value={"Saltwater"}>
+                            Saltwater
                     </MenuItem>
-                    <MenuItem value={"Terrarium"}>
-                        Terrarium
+                        <MenuItem value={"Terrarium"}>
+                            Terrarium
                     </MenuItem>
-                </Select>
+                    </Select>
                 </FormControl>
 
-                <TextField 
-                label="When did you start this tank?"
-                id="age"
-                type="date"
-                defaultValue={new Date().toLocaleDateString()}
-                margin="normal"
-                variant="outlined"
-                InputLabelProps={{
-                    shrink: true,
-                }}
-                className={classes.formControl}
-                onChange={handleChange('age')}
-                value={values.age}
+                <TextField
+                    label="When did you start this tank?"
+                    id="age"
+                    type="date"
+                    // defaultValue={values.age}
+                    margin="normal"
+                    variant="outlined"
+                    InputLabelProps={{
+                        shrink: true,
+                    }}
+                    className={classes.formControl}
+                    onChange={handleChange('age')}
+                    value={formatDate}
                 />
             </div>
             <TextField

@@ -5,10 +5,14 @@ interface ProtectedRouteProps extends RouteProps {
 }
 
 const ProtectedRoute = ({ children, ...rest }: ProtectedRouteProps) => {
+    console.log("rest: ");
     console.log(rest);
+    
     return (
         <Route
             {...rest} render={({ location }) => {
+                console.log('location: ')
+                console.log(location);
                 return rest.isLoggedIn ? children
                 : <Redirect to={{
                     pathname: '/signup',

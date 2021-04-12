@@ -1,4 +1,4 @@
-import { ChangeEvent } from 'react';
+import { ChangeEvent, useContext } from 'react';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
@@ -14,6 +14,7 @@ import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import * as Utils from '../../utils/utils';
 import axios from 'axios';
+import UserProvider from '../../contexts/user/UserProvider';
 
 
 const styles = (theme: Theme) => createStyles(({
@@ -37,7 +38,7 @@ const styles = (theme: Theme) => createStyles(({
     },
 }));
 
-interface Props extends WithStyles<typeof styles> {};
+interface Props extends WithStyles<typeof styles> { };
 
 export interface State {
     activeStep: number;
@@ -48,12 +49,13 @@ export interface State {
     images: any[];
 }
 
-// Type with specific attributes from State Interface
-export type NewTank = Pick<State, "name" | "age" | "description" | "type" | "images">;
-
+// Multipart form steps
 const steps = ['Details', 'Contents', 'Media'];
 
 class CreateTankView extends Component<Props, State> {
+
+    static userData = UserProvider.context;
+
     constructor(props: Props) {
         super(props)
         this.state = {
@@ -68,7 +70,11 @@ class CreateTankView extends Component<Props, State> {
 
     buildFormData = () => {
         const tankFormData = new FormData();
+        // add userID to form
+        // console.log(this.userData)
+        // tankFormData.append('userID', CreateTankView.userData.userID);
         Object.entries(this.state).map(([key, value]) => {
+            // Images will be in an array, so iterate over this array to add them to the files object in formidable formData
             if (key === 'images') {
                 this.state.images.forEach(image => {
                     console.log(`adding ${image.name}: ${image}`)
@@ -76,6 +82,9 @@ class CreateTankView extends Component<Props, State> {
                 });
             } else {
                 console.log(`adding ${key}: ${value}`)
+                // if (key === 'age') {
+                //     tankFormData.append(key, Utils.parseDate(value))
+                // }
                 tankFormData.append(key, value);
             }
         });
@@ -96,7 +105,7 @@ class CreateTankView extends Component<Props, State> {
         const target = e.target as HTMLInputElement;
         console.log(target.value, input)
         this.setState(state => ({
-            ...state,    
+            ...state,
             [input]: input === 'age' ? Date.parse(target.value) : target.value // handleChange('name') would update the state value for the 'name' entry
         }));
     }
@@ -106,7 +115,7 @@ class CreateTankView extends Component<Props, State> {
         const files = target.files as FileList;
         const filesForState: any[] = []
 
-        for (let i=0; i < files.length; i++) {
+        for (let i = 0; i < files.length; i++) {
             filesForState.push(files[i])
         }
 
@@ -119,35 +128,14 @@ class CreateTankView extends Component<Props, State> {
         }));
     }
 
-    handleSubmit = async(e: SyntheticEvent) => {
+    handleSubmit = async (e: SyntheticEvent) => {
         e.preventDefault();
         console.log('adding following state to databse');
-        const newTank: NewTank = {
-            name: this.state.name,
-            description: this.state.description,
-            type: this.state.type,
-            images:  this.state.images,
-            age: Date.parse(this.state.age)
-        }
-
+        // Add fields from this.state to form
         const form = this.buildFormData();
         form.forEach(data => console.log(data));
-
-        // Create multipart formdata to upload images
-        const imagesFormData = new FormData();
-        // add each image stored in state to formdata
-        this.state.images.forEach(image => {
-            imagesFormData.append(image.name, image);
-        });
-
-        imagesFormData.forEach(data => console.log(data));
-        
+        // Hit the addTank endpoint to create a tank
         Utils.addTank(form);
-        // Utils.addTank(newTank)
-        // .then(res => {
-        //     imagesFormData.append('tankID', res.id);
-        //     Utils.uploadImages(imagesFormData, res.id);
-        // }).catch(e => console.error(e));
     }
 
     getStepContent = (step: number, values: State) => {

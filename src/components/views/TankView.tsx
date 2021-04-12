@@ -31,9 +31,12 @@ export const TankView = () => {
     }, []);
 
     const getTank = async() => {
+        console.log('getTank(): ');
+        console.log(API_URL);
         fetch(API_URL)
         .then(res => res.json())
         .then(res => {
+            console.log('setting tank data')
             setTankData(res);
         }).then(() => {
             getImages();
@@ -52,7 +55,10 @@ export const TankView = () => {
             console.log('getImages(): ')
             console.log(res);
             setTankImages(res);
-        }).catch(e => console.error(e));
+        }).catch(e => {
+            console.log('error!!:')
+            console.error(e)
+        });
     }
     
     const classes = useStyles();
@@ -63,7 +69,6 @@ export const TankView = () => {
     }
     return(
         <main className={classes.mainContent}>
-            {/* {listData({...tankData as Tank})} */}
             <TankDisplay {...props as Tank} />
         </main>
     )

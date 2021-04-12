@@ -31,7 +31,7 @@ function App() {
   const logout = () => {
     Utils.logOut()
     .then(res => {
-      console.log(res)
+      console.log('logout(): ', res)
       if (res.status === 200 && res.data === "logged out") {
         setLoggedIn(false);
       }
