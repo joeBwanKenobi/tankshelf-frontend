@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import axios from 'axios';
+import Plant from '../../constants/plant.interface';
+import Fish from '../../constants/fish.interface';
 
 // Returns a user object from api or null if response is 401
 export const getUser = async (): Promise<any> => {
@@ -50,6 +52,20 @@ export const addTank = async (tankDetails: FormData): Promise<any> => {
     });
 
     return newTank.data;
+}
+
+export const getPlants = async(): Promise<Plant[]> => {
+    console.log(`calling GET ${process.env.REACT_APP_API_BASE_URL}/api/plants/freshwater`)
+    const plants = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/plants/freshwater`)
+
+    return plants.data;
+}
+
+export const getFish = async(): Promise<Fish[]> => {
+    console.log(`calling GET ${process.env.REACT_APP_API_BASE_URL}/api/fish/freshwater`)
+    const fish = await axios.get(`${process.env.REACT_APP_API_BASE_URL}/api/fish/freshwater`)
+
+    return fish.data;
 }
 
 const MS_IN_A_DAY = 1000 * 60 * 60 * 24

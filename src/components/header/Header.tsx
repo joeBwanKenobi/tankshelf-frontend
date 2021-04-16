@@ -186,16 +186,16 @@ export default function Header() {
           </Typography>
           <div className={classes.search}>
             <div className={classes.searchIcon}>
-              <SearchIcon />
+              {/* <SearchIcon /> */}
             </div>
-            <InputBase
+            {/* <InputBase
               placeholder="Search…"
               classes={{
                 root: classes.inputRoot,
                 input: classes.inputInput,
               }}
               inputProps={{ 'aria-label': 'search' }}
-            />
+            /> */}
           </div>
           
           <div className={classes.grow} />
