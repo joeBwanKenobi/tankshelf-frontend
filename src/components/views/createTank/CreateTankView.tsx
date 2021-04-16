@@ -1,10 +1,11 @@
-import { ChangeEvent, useContext } from 'react';
+import { ChangeEvent, Fragment, Component, SyntheticEvent } from 'react';
+import { Link, Redirect } from 'react-router-dom';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { withStyles, createStyles, WithStyles } from '@material-ui/core/styles';
-import { useState, Fragment, Component, SyntheticEvent } from 'react';
 import { Theme } from '@material-ui/core/styles';
-import TankContents from './TankContents';
+import PlantContents from './PlantContents';
+import FishContents from './FishContents';
 import TankDetails from './TankDetails';
 import TankMedia from './TankMedia';
 import Paper from '@material-ui/core/Paper';
@@ -13,8 +14,10 @@ import Step from '@material-ui/core/Step';
 import StepLabel from '@material-ui/core/StepLabel';
 import Button from '@material-ui/core/Button';
 import * as Utils from '../../utils/utils';
-import axios from 'axios';
 import UserProvider from '../../contexts/user/UserProvider';
+import Plant from '../../../constants/plant.interface';
+import Fish from '../../../constants/fish.interface';
+
 
 
 const styles = (theme: Theme) => createStyles(({
@@ -40,6 +43,7 @@ const styles = (theme: Theme) => createStyles(({
 
 interface Props extends WithStyles<typeof styles> { };
 
+
 export interface State {
     activeStep: number;
     name: string;
@@ -47,10 +51,14 @@ export interface State {
     age: any;
     description: string;
     images: any[];
+    plants?: Plant[];
+    inhabitants?: Fish[];
+    plantsList: Plant[] | [];
+    fishList: Fish[] | [];
 }
 
 // Multipart form steps
-const steps = ['Details', 'Contents', 'Media'];
+const steps = ['Details', 'Fish', 'Plants', 'Media'];
 
 class CreateTankView extends Component<Props, State> {
 
@@ -64,8 +72,21 @@ class CreateTankView extends Component<Props, State> {
             type: "",
             age: null,
             description: "",
-            images: []
+            images: [],
+            plantsList: [],
+            fishList: [],
         }
+    }
+
+    componentDidMount() {
+        // Call DB for list of freshwater plants
+        Utils.getPlants().then(res => {
+            this.setState({ plantsList: res })
+        });
+        // Call DB for list of freshwater fish
+        Utils.getFish().then(res => {
+            this.setState({ fishList: res })
+        });
     }
 
     buildFormData = () => {
@@ -74,18 +95,33 @@ class CreateTankView extends Component<Props, State> {
         // console.log(this.userData)
         // tankFormData.append('userID', CreateTankView.userData.userID);
         Object.entries(this.state).map(([key, value]) => {
-            // Images will be in an array, so iterate over this array to add them to the files object in formidable formData
-            if (key === 'images') {
-                this.state.images.forEach(image => {
-                    console.log(`adding ${image.name}: ${image}`)
-                    tankFormData.append(image.name, image);
-                });
-            } else {
-                console.log(`adding ${key}: ${value}`)
-                // if (key === 'age') {
-                //     tankFormData.append(key, Utils.parseDate(value))
-                // }
-                tankFormData.append(key, value);
+            switch(key) {
+                case 'images':
+                   // Images will be in an array, so iterate over this array to add them to the files object in formidable formData
+                    this.state.images.forEach(image => {
+                        console.log(`adding ${image.name}: ${image}`)
+                        tankFormData.append(image.name, image);
+                    });
+                    break;
+                case 'inhabitants':
+                    console.log(`adding ${key}: ${value}`)
+                    tankFormData.append(key, JSON.stringify(value));
+                    break;
+                case 'plants':
+                    console.log(`adding ${key}: ${value}`)
+                    tankFormData.append(key, JSON.stringify(value));
+                    break;
+                case 'plantsList':
+                    // this.state.plantsList is a huge list for fuzzy search, we don't want to do anything with this
+                    break;
+                case 'fishList':
+                    // this.state.fishList is a huge list for fuzzy search, we don't want to do anything with this
+                    break;
+                default:
+                    console.log(`adding ${key}: ${value}`)
+                    tankFormData.append(key, value);
+
+             
             }
         });
         return tankFormData;
@@ -108,6 +144,19 @@ class CreateTankView extends Component<Props, State> {
             ...state,
             [input]: input === 'age' ? Date.parse(target.value) : target.value // handleChange('name') would update the state value for the 'name' entry
         }));
+    }
+
+    addContents = (selectedContents:any) => {
+        if ('plants' in selectedContents) {
+            console.log('plants!')
+            console.log(selectedContents);
+            this.setState({plants: [...selectedContents.plants]});
+        }
+        if ('fish' in selectedContents) {
+            console.log('fish!')
+            console.log(selectedContents);
+            this.setState({inhabitants: [...selectedContents.fish]});
+        }
     }
 
     handleImageAdd = (e: ChangeEvent) => {
@@ -134,8 +183,10 @@ class CreateTankView extends Component<Props, State> {
         // Add fields from this.state to form
         const form = this.buildFormData();
         form.forEach(data => console.log(data));
+        console.log(form.entries);
         // Hit the addTank endpoint to create a tank
         Utils.addTank(form);
+        this.handleNext();
     }
 
     getStepContent = (step: number, values: State) => {
@@ -143,16 +194,18 @@ class CreateTankView extends Component<Props, State> {
             case 0:
                 return <TankDetails handleChange={this.handleChange} values={values} />;
             case 1:
-                return <TankContents handleChange={this.handleChange} values={values} />;
+                return <FishContents addContents={this.addContents} values={values} />;
             case 2:
-                return <TankMedia handleImageAdd={this.handleImageAdd} values={values} />;
+                return <PlantContents addContents={this.addContents} values={values} />;
+            case 3:
+                return <TankMedia handleImageAdd={this.handleImageAdd} values={values} />;  
         }
     }
 
     render() {
         const { classes } = this.props;
-        const { name, type, age, description, images } = this.state;
-        const values = { name, type, age, description, images } as State;
+        const { name, type, age, description, images, plantsList, plants, fishList, inhabitants } = this.state;
+        const values = { name, type, age, description, images, plantsList, plants, fishList, inhabitants } as State;
 
         return (
             <Container maxWidth="lg" className={classes.mainContent}>
@@ -173,7 +226,10 @@ class CreateTankView extends Component<Props, State> {
                         {this.state.activeStep === steps.length ? (
                             <Fragment>
                                 <Typography variant="h5" gutterBottom>
-                                    Complete
+                                    Tank Added!
+                                    <Link to="/">
+                                        View your tank here.
+                                    </Link>
                             </Typography>
                             </Fragment>
 

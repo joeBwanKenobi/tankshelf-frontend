@@ -42,7 +42,7 @@ export const TanksGrid = ({title}: {title: String}) => {
     const classes = useStyles();
     return(
         <main className={classes.mainContent}>
-            <Typography className={classes.heading} variant="h2">
+            <Typography className={classes.heading} variant="h4">
                 {title}
             </Typography>
             <Grid container spacing={2}>
