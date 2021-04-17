@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import clsx from 'clsx';
-import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
+import Divider from '@material-ui/core/Divider';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 import Collapse from '@material-ui/core/Collapse';
@@ -22,17 +22,34 @@ import VideoPlayer from '../media/VideoPlayer';
 import * as Utils from '../utils/utils';
 import { LocalPrintshopSharp } from '@material-ui/icons';
 
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
     },
     media: {
-      height: 0,
-      paddingTop: '56.25%', // 16:9
+      width: '100%',
+    },
+    header: {
+      width: '100%',
     },
     details: {
       marginLeft: 'auto',
+    },
+    mediaContainer: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+    },
+    thumbnailContainer: {
+      width: '100%',
+      margin: theme.spacing(2, 0, 2, 0),
+      display: 'flex',
+      justifyContent: 'start'
+    },
+    thumbnail: {
+      width: '80%'
     },
     expand: {
       transform: 'rotate(0deg)',
@@ -48,7 +65,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     playButton: {
       marginBottom: theme.spacing(2)
-    }
+    },
+    divider: {
+      margin: theme.spacing(2, 0, 2, 0)
+    },
   }),
 );
 
@@ -60,6 +80,16 @@ export default function TankDisplay(props: Tank) {
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
+
+  // Creates Grid item for each tank object in list
+  const displayImage = (image: any) => {
+    console.log(image);
+    return(
+        <Grid item xs={12} sm={4} key={image} >
+            <img src={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${image?.url}`} className={classes.thumbnail} />
+        </Grid>
+    )
+}
 
   // const streamOrImg = (stream: string | null | undefined) => {
   //   let media;
@@ -78,52 +108,38 @@ export default function TankDisplay(props: Tank) {
 
 
   return (
-    <Card className={classes.root}>
-      <CardHeader
-        avatar={
-            <Avatar src="/broken-image.jpg" />
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={props.name}
-        subheader={props.type}
-      />
-      <CardMedia className={classes.media} image={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${props.images[0]?.url}`} title={props.name} />
-      <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {`This is a ${props.type} tank that has been evolving for ${ageInWeeks} weeks.`}
-        </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        <Typography className={classes.details} variant="body1">Details</Typography>
-        <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </IconButton>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>Method:</Typography>
-          <Typography paragraph>
-            {props.description}
+    <Grid container className={classes.root} spacing={2} >
+      <Grid item xs={12}>
+        <CardHeader
+          className={classes.header}
+          avatar={
+              <Avatar src="/broken-image.jpg" />
+          }
+          action={
+            <IconButton aria-label="settings">
+              <MoreVertIcon />
+            </IconButton>
+          }
+          title={props.name}
+          subheader={props.type}
+        />
+      </Grid>
+      <Grid item container xs={12} lg={6} className={classes.mediaContainer}>
+        <img className={classes.media} src={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${props.images[0]?.url}`} title={props.name} />
+        <Grid item xs={12} className={classes.thumbnailContainer}>
+          {props.images.map(image => displayImage(image))}
+        </Grid>
+      </Grid>
+
+      <Grid item xs={12} lg={6}>
+        <Typography color="textSecondary" component="p">
+            {`This is a ${props.type} tank that has been evolving for ${ageInWeeks} weeks.`}
           </Typography>
-        </CardContent>
-      </Collapse>
-    </Card>
+          <Divider className={classes.divider}></Divider>
+          <Typography>
+            Types of plants found in this tank:
+          </Typography>
+      </Grid>
+    </Grid>
   );
 }

@@ -25,14 +25,14 @@ export const TankView = () => {
     // create state variable and function to update it
     const [tankData, setTankData] = useState({});
     const [tankImages, setTankImages] = useState<any[]>([]);
+    const [plants, setPlants] = useState<any[]>([]);
+    const [fish, setFish] = useState<any[]>([]);
     
     useEffect(() => {
         getTank();
     }, []);
 
     const getTank = async() => {
-        console.log('getTank(): ');
-        console.log(API_URL);
         fetch(API_URL)
         .then(res => res.json())
         .then(res => {
@@ -40,6 +40,7 @@ export const TankView = () => {
             setTankData(res);
         }).then(() => {
             getImages();
+            getContents();
         })
         .catch(e => console.error(e));
     }
@@ -54,11 +55,31 @@ export const TankView = () => {
         .then(res => {
             console.log('getImages(): ')
             console.log(res);
-            setTankImages(res);
+            setTankImages([...res]);
         }).catch(e => {
             console.log('error!!:')
             console.error(e)
         });
+    }
+
+    const getContents = async() => {
+        // get plants related to this tank
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/tank/${id}`)
+        .then(res => res.json())
+        .then(res => {
+            console.log('getContents() :: plants ::');
+            console.log(res);
+            setPlants([...res]);
+        }).catch(e => console.error(e));
+        
+        // get fish related to this tank
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/fish/tank/${id}`)
+        .then(res => res.json())
+        .then(res => {
+            console.log('getContents() :: fish ::');
+            console.log(res);
+            setPlants([...res]);
+        }).catch(e => console.error(e));
     }
     
     const classes = useStyles();
@@ -66,10 +87,12 @@ export const TankView = () => {
     const props = {
         ...tankData,
         images: tankImages,
+        plants: plants,
+        fish: fish
     }
     return(
         <main className={classes.mainContent}>
-            <TankDisplay {...props as Tank} />
+            <TankDisplay {...props as any} />
         </main>
     )
 }
