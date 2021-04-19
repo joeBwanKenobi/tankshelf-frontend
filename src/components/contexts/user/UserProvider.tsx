@@ -1,5 +1,5 @@
 import React, { createContext, useState, useEffect, useContext } from "react";
-import * as Utils from '../../utils/utils';
+import * as Utils from '../../../utils/utils';
 
 export interface User {
     userID: string;

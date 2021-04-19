@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import TankDisplay from '../tank/TankDisplay';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { Tank } from '../../constants/tank.interface';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import Plant from '../../constants/plant.interface';
+import Fish from '../../constants/fish.interface';
 
 
 const useStyles = makeStyles((theme) => ({
     mainContent: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(2),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
@@ -25,8 +24,8 @@ export const TankView = () => {
     // create state variable and function to update it
     const [tankData, setTankData] = useState({});
     const [tankImages, setTankImages] = useState<any[]>([]);
-    const [plants, setPlants] = useState<any[]>([]);
-    const [fish, setFish] = useState<any[]>([]);
+    const [plants, setPlants] = useState<Plant[]>();
+    const [fish, setFish] = useState<Fish[]>();
     
     useEffect(() => {
         getTank();
@@ -78,7 +77,7 @@ export const TankView = () => {
         .then(res => {
             console.log('getContents() :: fish ::');
             console.log(res);
-            setPlants([...res]);
+            setFish([...res]);
         }).catch(e => console.error(e));
     }
     

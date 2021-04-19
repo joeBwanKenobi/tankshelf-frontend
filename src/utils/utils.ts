@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import axios from 'axios';
-import Plant from '../../constants/plant.interface';
-import Fish from '../../constants/fish.interface';
+import Plant from '../constants/plant.interface';
+import Fish from '../constants/fish.interface';
 
 // Returns a user object from api or null if response is 401
 export const getUser = async (): Promise<any> => {

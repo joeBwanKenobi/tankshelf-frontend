@@ -7,7 +7,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import makeStyles from '@material-ui/styles/makeStyles';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { State } from './CreateTankView';
-import * as Utils from '../../utils/utils';
+import * as Utils from '../../../utils/utils';
 
 const useStyles = makeStyles((theme: Theme) => ({
     form: {

@@ -12,11 +12,11 @@ export const Layout = ({ children }: { children: ReactNode }) => {
             </Grid>
 
             <Grid item container>
-                <Grid item xs={false} sm={2}></Grid>
-                <Grid item xs={12} sm={8}>
+                <Grid item xs={false} sm={1}></Grid>
+                <Grid item xs={12} sm={10}>
                     {children}
                 </Grid>
-                <Grid item xs={false} sm={2}></Grid>
+                <Grid item xs={false} sm={1}></Grid>
             </Grid>
         </Grid>
     )
