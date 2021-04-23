@@ -18,6 +18,7 @@ import VideoPlayer from '../media/VideoPlayer';
 import * as Utils from '../../utils/utils';
 import PlantsList from '../plants/PlantsList';
 import FishList from '../fish/FishList';
+import DrowDownMenu from '../menus/DropDownMenu';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -76,11 +77,9 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function TankDisplay(props: Tank) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
+  // Set anchor elements for opening menus
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const ageInWeeks = props.age ? Math.round(Utils.ageInDays(props.age) / 7) : null;
-
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
 
   // Creates Grid item for each tank object in list
   const displayImage = (image: any) => {
@@ -106,12 +105,17 @@ export default function TankDisplay(props: Tank) {
   //   return media;
   // }
 
-  const tankOptions = () => {
-
+  const tankOptionsMenu = () => {
+    const menuId = 'tank-options-menu';
+    const menuItems = [
+      { label: 'Edit', url: '/tank/edit' }
+    ];
     return (
-      <List className={classes.tankOptions}>
-        <ListItem>Edit</ListItem>
-      </List>
+      <DrowDownMenu data={menuItems} action={
+        <IconButton aria-label="settings">
+          <MoreVertIcon />
+        </IconButton>
+      } />
     )
   }
 
@@ -124,16 +128,11 @@ export default function TankDisplay(props: Tank) {
             <Avatar src="/broken-image.jpg" />
           }
           action={
-            <IconButton aria-label="settings" onClick={() => { setExpanded(!expanded) }}>
-              <MoreVertIcon />
-            </IconButton>
+            tankOptionsMenu()
           }
           title={props.name}
           subheader={`Type: ${props.type} - Age: ${ageInWeeks} weeks`}
         />
-        {expanded && 
-          tankOptions()
-        }
       </Grid>
       <Grid item container xs={12} md={6} className={classes.mediaContainer}>
         <img className={classes.media} src={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${props.images[0]?.url}`} title={props.name} />
