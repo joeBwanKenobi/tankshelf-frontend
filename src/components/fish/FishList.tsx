@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const FishList = (props: { listOfFish: Fish[] }) => {
     const classes = useStyles();
-    console.log(props);
 
     const displayPlant = (fishObject: any) => {
         return (

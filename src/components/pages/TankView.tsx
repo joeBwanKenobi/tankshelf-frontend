@@ -35,7 +35,6 @@ export const TankView = () => {
         fetch(API_URL)
         .then(res => res.json())
         .then(res => {
-            console.log('setting tank data')
             setTankData(res);
         }).then(() => {
             getImages();
@@ -52,11 +51,8 @@ export const TankView = () => {
         })
         .then(res => res.json())
         .then(res => {
-            console.log('getImages(): ')
-            console.log(res);
             setTankImages([...res]);
         }).catch(e => {
-            console.log('error!!:')
             console.error(e)
         });
     }
@@ -66,8 +62,6 @@ export const TankView = () => {
         fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/tank/${id}`)
         .then(res => res.json())
         .then(res => {
-            console.log('getContents() :: plants ::');
-            console.log(res);
             setPlants([...res]);
         }).catch(e => console.error(e));
         
@@ -75,8 +69,6 @@ export const TankView = () => {
         fetch(`${process.env.REACT_APP_API_BASE_URL}/api/fish/tank/${id}`)
         .then(res => res.json())
         .then(res => {
-            console.log('getContents() :: fish ::');
-            console.log(res);
             setFish([...res]);
         }).catch(e => console.error(e));
     }

@@ -105,15 +105,6 @@ const PlantContents = ({ addContents, values }: { addContents: Function, values:
         }
     }
 
-    const handleFocusOut = (e: SyntheticEvent) => {
-        setTimeout(() => {
-            setVisible('hidden');
-            setPattern("");
-            setSuggestions([]);
-        }, 100);
-
-    }
-
     const populateSuggestions = (suggestion: any) => {
         return (
             <ListItem key={suggestion.item.plantID} data-id={suggestion.item.plantID} value={suggestion.item.name != null ? suggestion.item.name : ""} className={classes.listItem} onClick={valueSelected}>
@@ -167,7 +158,6 @@ const PlantContents = ({ addContents, values }: { addContents: Function, values:
                     fullWidth
                     className={classes.typeControl}
                     onFocus={() => setVisible('visible')}
-                    onBlur={handleFocusOut}
                 />
                 <List component="ul" className={classes.plantList} style={{ visibility: visible }}>
                     {suggestions != undefined ? suggestions.map((s: any) => populateSuggestions(s)) : ""}
