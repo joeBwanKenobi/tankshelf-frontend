@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Switch, Redirect, useHistory } from 're
 import './App.css';
 import { Layout } from './layouts/Layout';
 import { TanksGrid } from './components/pages/TanksGridView';
-import { TankView } from './components/pages/TankView';
+import { TankSingleView } from './components/pages/TankSingleView';
 import { ProfileView } from './components/pages/ProfileView';
 import SignUp from './components/pages/SignUp';
 import Login from './components/pages/Login';
@@ -62,7 +62,7 @@ function App() {
         <AuthContext.Provider value={{ isLoggedIn: loggedIn, cookie: null, login: login, logout: logout  }}>
           <Layout>
             <Route exact path="/tanks" children={<TanksGrid title="Tanks" />} />
-            <Route exact path="/tank/:tankId" children={<TankView />} />
+            <Route exact path="/tank/:tankId" children={<TankSingleView />} />
             <Route exact path="/signup" children={<SignUp />} />
             <Route exact path="/login" children={<Login />} />
             <ProtectedRoute path="/tanks/create" isLoggedIn={loggedIn} >
