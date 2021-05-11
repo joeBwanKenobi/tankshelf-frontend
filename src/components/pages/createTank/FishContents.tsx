@@ -68,6 +68,8 @@ const FishContents = ({ addContents, values }: { addContents: Function, values: 
 
     // Set parent component state, fill with contents
     useEffect(() => {
+        console.log(selected);
+        
         // If a user goes to another step from fish we want to populate fish already selected and stored in parent state
         if (selected.length === 0 && values.inhabitants != undefined) {
             setSelected([...values.inhabitants]);
@@ -107,11 +109,15 @@ const FishContents = ({ addContents, values }: { addContents: Function, values: 
     }
 
     const handleFocusOut = (e: SyntheticEvent) => {
-        setTimeout(() => {
-            setVisible('hidden');
-            setPattern("");
-            setSuggestions([]);
-        }, 100);
+        // setTimeout(() => {
+        //     setVisible('hidden');
+        //     setPattern("");
+        //     setSuggestions([]);
+        // }, 500);
+
+        setVisible('hidden');
+        setPattern("");
+        setSuggestions([]);
 
     }
 
@@ -135,6 +141,7 @@ const FishContents = ({ addContents, values }: { addContents: Function, values: 
     }
 
     const valueSelected = (e: SyntheticEvent) => {
+        console.log('valueSelected')
         const name = e.currentTarget.textContent
         const targetId = parseInt(e.currentTarget.getAttribute('data-id') as string)
         setVisible('hidden');
@@ -165,7 +172,6 @@ const FishContents = ({ addContents, values }: { addContents: Function, values: 
                     fullWidth
                     className={classes.typeControl}
                     onFocus={() => setVisible('visible')}
-                    onBlur={handleFocusOut}
                 />
                 <List component="ul" className={classes.fishList} style={{ visibility: visible }}>
                     {suggestions != undefined ? suggestions.map((s: any) => populateSuggestions(s)) : ""}

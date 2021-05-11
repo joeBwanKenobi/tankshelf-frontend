@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import TankDisplay from '../tank/TankDisplay';
 import { makeStyles } from '@material-ui/core/styles';
-import Typography from '@material-ui/core/Typography';
-import { Tank } from '../../constants/tank.interface';
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import Plant from '../../constants/plant.interface';
+import Fish from '../../constants/fish.interface';
 
 
 const useStyles = makeStyles((theme) => ({
     mainContent: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(2),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
@@ -25,21 +24,21 @@ export const TankView = () => {
     // create state variable and function to update it
     const [tankData, setTankData] = useState({});
     const [tankImages, setTankImages] = useState<any[]>([]);
+    const [plants, setPlants] = useState<Plant[]>();
+    const [fish, setFish] = useState<Fish[]>();
     
     useEffect(() => {
         getTank();
     }, []);
 
     const getTank = async() => {
-        console.log('getTank(): ');
-        console.log(API_URL);
         fetch(API_URL)
         .then(res => res.json())
         .then(res => {
-            console.log('setting tank data')
             setTankData(res);
         }).then(() => {
             getImages();
+            getContents();
         })
         .catch(e => console.error(e));
     }
@@ -52,13 +51,26 @@ export const TankView = () => {
         })
         .then(res => res.json())
         .then(res => {
-            console.log('getImages(): ')
-            console.log(res);
-            setTankImages(res);
+            setTankImages([...res]);
         }).catch(e => {
-            console.log('error!!:')
             console.error(e)
         });
+    }
+
+    const getContents = async() => {
+        // get plants related to this tank
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/tank/${id}`)
+        .then(res => res.json())
+        .then(res => {
+            setPlants([...res]);
+        }).catch(e => console.error(e));
+        
+        // get fish related to this tank
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/fish/tank/${id}`)
+        .then(res => res.json())
+        .then(res => {
+            setFish([...res]);
+        }).catch(e => console.error(e));
     }
     
     const classes = useStyles();
@@ -66,10 +78,12 @@ export const TankView = () => {
     const props = {
         ...tankData,
         images: tankImages,
+        plants: plants,
+        fish: fish
     }
     return(
         <main className={classes.mainContent}>
-            <TankDisplay {...props as Tank} />
+            <TankDisplay {...props as any} />
         </main>
     )
 }

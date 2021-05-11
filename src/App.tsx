@@ -2,18 +2,18 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Switch, Redirect, useHistory } from 'react-router-dom';
 import './App.css';
 import { Layout } from './layouts/Layout';
-import { TanksGrid } from './components/views/TanksGridView';
-import { TankView } from './components/views/TankView';
-import { ProfileView } from './components/views/ProfileView';
-import SignUp from './components/views/SignUp';
-import Login from './components/views/Login';
+import { TanksGrid } from './components/pages/TanksGridView';
+import { TankView } from './components/pages/TankView';
+import { ProfileView } from './components/pages/ProfileView';
+import SignUp from './components/pages/SignUp';
+import Login from './components/pages/Login';
 import classes from '*.module.css';
-import Home from './components/views/Home';
+import Home from './components/pages/Home';
 import UserProvider from './components/contexts/user/UserProvider';
 import AuthContext from './components/contexts/auth/AuthContext';
 import ProtectedRoute from './components/routes/ProtectedRoute';
-import * as Utils from './components/utils/utils';
-import CreateTankView from './components/views/createTank/CreateTankView';
+import * as Utils from './utils/utils';
+import CreateTankView from './components/pages/createTank/CreateTankView';
 
 
 require('dotenv').config();

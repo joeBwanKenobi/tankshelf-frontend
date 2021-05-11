@@ -1,26 +1,25 @@
 import React, { useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import clsx from 'clsx';
-import Card from '@material-ui/core/Card';
+import Grid from '@material-ui/core/Grid';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
-import Collapse from '@material-ui/core/Collapse';
+import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import ShareIcon from '@material-ui/icons/Share';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import { Tank } from '../../constants/tank.interface';
-import { Button, Icon } from '@material-ui/core';
+import { Button, Icon, ListItemText } from '@material-ui/core';
 import VideoPlayer from '../media/VideoPlayer';
-import * as Utils from '../utils/utils';
-import { LocalPrintshopSharp } from '@material-ui/icons';
+import * as Utils from '../../utils/utils';
+import PlantsList from '../plants/PlantsList';
+import FishList from '../fish/FishList';
+import DrowDownMenu from '../menus/DropDownMenu';
+
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -28,11 +27,27 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
     },
     media: {
-      height: 0,
-      paddingTop: '56.25%', // 16:9
+      width: '100%',
+    },
+    header: {
+      width: '100%',
     },
     details: {
       marginLeft: 'auto',
+    },
+    mediaContainer: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      justifyContent: 'center',
+    },
+    thumbnailContainer: {
+      width: '100%',
+      margin: theme.spacing(2, 0, 2, 0),
+      display: 'flex',
+      justifyContent: 'start'
+    },
+    thumbnail: {
+      width: '80%'
     },
     expand: {
       transform: 'rotate(0deg)',
@@ -48,6 +63,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     playButton: {
       marginBottom: theme.spacing(2)
+    },
+    divider: {
+      margin: theme.spacing(2, 0, 2, 0)
+    },
+    tankOptions: {
+      width: theme.spacing(8),
+      background: 'red',
     }
   }),
 );
@@ -55,11 +77,18 @@ const useStyles = makeStyles((theme: Theme) =>
 export default function TankDisplay(props: Tank) {
   const classes = useStyles();
   const [expanded, setExpanded] = React.useState(false);
+  // Set anchor elements for opening menus
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const ageInWeeks = props.age ? Math.round(Utils.ageInDays(props.age) / 7) : null;
 
-  const handleExpandClick = () => {
-    setExpanded(!expanded);
-  };
+  // Creates Grid item for each tank object in list
+  const displayImage = (image: any) => {
+    return (
+      <Grid item xs={12} sm={4} key={image.url} >
+        <img src={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${image?.url}`} className={classes.thumbnail} />
+      </Grid>
+    )
+  }
 
   // const streamOrImg = (stream: string | null | undefined) => {
   //   let media;
@@ -76,54 +105,67 @@ export default function TankDisplay(props: Tank) {
   //   return media;
   // }
 
+  const tankOptionsMenu = () => {
+    const menuId = 'tank-options-menu';
+    const menuItems = [
+      { label: 'Edit', url: '/tank/edit' }
+    ];
+    return (
+      <DrowDownMenu data={menuItems} action={
+        <IconButton aria-label="settings">
+          <MoreVertIcon />
+        </IconButton>
+      } />
+    )
+  }
 
   return (
-    <Card className={classes.root}>
-      <CardHeader
-        avatar={
+    <Grid container className={classes.root} spacing={2} >
+      <Grid item xs={12}>
+        <CardHeader
+          className={classes.header}
+          avatar={
             <Avatar src="/broken-image.jpg" />
-        }
-        action={
-          <IconButton aria-label="settings">
-            <MoreVertIcon />
-          </IconButton>
-        }
-        title={props.name}
-        subheader={props.type}
-      />
-      <CardMedia className={classes.media} image={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${props.images[0]?.url}`} title={props.name} />
-      <CardContent>
-        <Typography variant="body2" color="textSecondary" component="p">
-          {`This is a ${props.type} tank that has been evolving for ${ageInWeeks} weeks.`}
+          }
+          action={
+            tankOptionsMenu()
+          }
+          title={props.name}
+          subheader={`Type: ${props.type} - Age: ${ageInWeeks} weeks`}
+        />
+      </Grid>
+      <Grid item container xs={12} md={6} className={classes.mediaContainer}>
+        <img className={classes.media} src={`${process.env.REACT_APP_IMAGE_CDN_DOMAIN}${props.images[0]?.url}`} title={props.name} />
+        <Grid item xs={12} className={classes.thumbnailContainer}>
+          {props.images.map(image => displayImage(image))}
+        </Grid>
+      </Grid>
+
+      <Grid item xs={12} md={6}>
+        <Typography color="textSecondary" component="p">
+          {props.description}
         </Typography>
-      </CardContent>
-      <CardActions disableSpacing>
-        <IconButton aria-label="add to favorites">
-          <FavoriteIcon />
-        </IconButton>
-        <IconButton aria-label="share">
-          <ShareIcon />
-        </IconButton>
-        <Typography className={classes.details} variant="body1">Details</Typography>
-        <IconButton
-          className={clsx(classes.expand, {
-            [classes.expandOpen]: expanded,
-          })}
-          onClick={handleExpandClick}
-          aria-expanded={expanded}
-          aria-label="show more"
-        >
-          <ExpandMoreIcon />
-        </IconButton>
-      </CardActions>
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          <Typography paragraph>Method:</Typography>
-          <Typography paragraph>
-            {props.description}
-          </Typography>
-        </CardContent>
-      </Collapse>
-    </Card>
+        <Divider className={classes.divider}></Divider>
+
+        {props.plants &&
+          <div>
+            <Typography>
+              Types of plants found in this tank:
+            </Typography>
+            <PlantsList listOfPlants={props.plants} />
+          </div>
+        }
+
+        {props.fish != undefined && props.fish.length > 0 &&
+          <div>
+            <Typography>
+              Types of fish found in this tank:
+            </Typography>
+            <FishList listOfFish={props.fish} />
+          </div>
+        }
+
+      </Grid>
+    </Grid>
   );
 }
