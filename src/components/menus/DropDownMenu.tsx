@@ -19,15 +19,13 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 // DropDownMenu takes an array of objects defining items and their target url, returns a dropdown menu list
-export default function DropDownMenu(props: { data: { label: string, url: string }[], buttonContent: React.ReactElement<any>, icon?: boolean }) {
+export default function DropDownMenu(props: { data: { label: string, url?: string, action?: Function }[], buttonContent: React.ReactElement<any>, icon?: boolean }) {
   const classes = useStyles();
   const history = useHistory();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
   const handleClick = (e: React.BaseSyntheticEvent) => {
-    console.log('click');
-    console.log(e.currentTarget);
     setAnchorEl(e.currentTarget);
   }
 
@@ -37,7 +35,7 @@ export default function DropDownMenu(props: { data: { label: string, url: string
 
   const menuItem = (item: any) => {
     return (
-      <MenuItem key={item.label} onClick={() => history.push(item.url)}>{item.label}</MenuItem>
+      <MenuItem key={item.label} onClick={() => item.url ? history.push(item.url) : item.action() }>{item.label}</MenuItem>
     )
   }
 

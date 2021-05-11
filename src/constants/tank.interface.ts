@@ -14,4 +14,5 @@ export interface Tank {
     url?: string | null;
     plants?: Plant[];
     fish?: Fish[];
+    userID: string;
 }
