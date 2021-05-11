@@ -19,12 +19,16 @@ import * as Utils from '../../utils/utils';
 import PlantsList from '../plants/PlantsList';
 import FishList from '../fish/FishList';
 import DrowDownMenu from '../menus/DropDownMenu';
+import Paper from '@material-ui/core/Paper';
 
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       width: '100%',
+    },
+    paper: {
+      padding: theme.spacing(2)
     },
     media: {
       width: '100%',
@@ -111,7 +115,9 @@ export default function TankDisplay(props: Tank) {
   ];
 
   return (
+    <Paper className={classes.paper}>
     <Grid container className={classes.root} spacing={2} >
+      
       <Grid item xs={12}>
         <CardHeader
           className={classes.header}
@@ -157,6 +163,8 @@ export default function TankDisplay(props: Tank) {
         }
 
       </Grid>
+      
     </Grid>
+    </Paper>
   );
 }
