@@ -207,8 +207,8 @@ export default function Header() {
             </Link> */}
           </div>
           <LoginOrAccount isLoggedIn={isLoggedIn} menuId={menuId} onClick={handleProfileMenuOpen} />
-          {anchorEl &&
-          <AccountMenu anchorEl={anchorEl} menuId={menuId} onClose={handleMenuClose} />}
+          {/* {anchorEl &&
+          <AccountMenu anchorEl={anchorEl} menuId={menuId} onClose={handleMenuClose} />} */}
           <div className={classes.sectionMobile}>
             <IconButton
               aria-label="show more"

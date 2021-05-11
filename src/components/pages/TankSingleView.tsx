@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-export const TankView = () => {
+export const TankSingleView = () => {
     const { tankId } = useParams<{ tankId: string }>();
     const id = tankId;
     // api settings

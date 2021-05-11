@@ -105,19 +105,10 @@ export default function TankDisplay(props: Tank) {
   //   return media;
   // }
 
-  const tankOptionsMenu = () => {
-    const menuId = 'tank-options-menu';
-    const menuItems = [
-      { label: 'Edit', url: '/tank/edit' }
-    ];
-    return (
-      <DrowDownMenu data={menuItems} action={
-        <IconButton aria-label="settings">
-          <MoreVertIcon />
-        </IconButton>
-      } />
-    )
-  }
+
+  const menuItems = [
+    { label: 'Edit', url: '/tank/edit' }
+  ];
 
   return (
     <Grid container className={classes.root} spacing={2} >
@@ -128,7 +119,7 @@ export default function TankDisplay(props: Tank) {
             <Avatar src="/broken-image.jpg" />
           }
           action={
-            tankOptionsMenu()
+            <DrowDownMenu data={menuItems} buttonContent={<MoreVertIcon />} icon={true} />
           }
           title={props.name}
           subheader={`Type: ${props.type} - Age: ${ageInWeeks} weeks`}

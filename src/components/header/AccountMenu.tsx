@@ -18,6 +18,12 @@ const AccountMenu = (props: { anchorEl: Element, menuId: string, onClose: MouseE
     history.push("/");
   }
 
+  const menuItems = [
+    { label: 'Profile', url: '/user/profile' },
+    { label: 'Logout', onClick: handleLogout },
+    
+  ];
+
     return (
         <Menu
         anchorEl={props.anchorEl}

@@ -2,13 +2,10 @@
 import { useHistory } from 'react-router-dom';
 import React from 'react';
 import Button from '@material-ui/core/Button';
-import ClickAwayListener from '@material-ui/core/ClickAwayListener';
-import Grow from '@material-ui/core/Grow';
-import Paper from '@material-ui/core/Paper';
-import Popper from '@material-ui/core/Popper';
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,71 +19,72 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 // DropDownMenu takes an array of objects defining items and their target url, returns a dropdown menu list
-export default function DropDownMenu(props: { data: { label: string, url: string }[], action: React.ReactElement<any> }) {
+export default function DropDownMenu(props: { data: { label: string, url: string }[], buttonContent: React.ReactElement<any>, icon?: boolean }) {
   const classes = useStyles();
   const history = useHistory();
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef<HTMLButtonElement>(null);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
 
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
+  const handleClick = (e: React.BaseSyntheticEvent) => {
+    console.log('click');
+    console.log(e.currentTarget);
+    setAnchorEl(e.currentTarget);
+  }
 
-  const handleClose = (event: React.MouseEvent<EventTarget>) => {
-    if (anchorRef.current && anchorRef.current.contains(event.target as HTMLElement)) {
-      return;
-    }
-
-    setOpen(false);
-  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  }
 
   const menuItem = (item: any) => {
     return (
-        <MenuItem onClick={() => history.push(item.url)}>{item.label}</MenuItem>
+      <MenuItem key={item.label} onClick={() => history.push(item.url)}>{item.label}</MenuItem>
     )
-}
-
-  function handleListKeyDown(event: React.KeyboardEvent) {
-    if (event.key === 'Tab') {
-      event.preventDefault();
-      setOpen(false);
-    }
   }
-
-  const Action = (props: {comp: React.ReactElement<any>, onClick: React.MouseEventHandler}) => React.cloneElement(props.comp, { onClick: props.onClick })
-  ;
-
-  // return focus to the button when we transitioned from !open -> open
-  const prevOpen = React.useRef(open);
-  React.useEffect(() => {
-    if (prevOpen.current === true && open === false) {
-      anchorRef.current!.focus();
-    }
-
-    prevOpen.current = open;
-  }, [open]);
 
   return (
     <div className={classes.root}>
-      <div>
-        <Action comp={props.action} onClick={handleToggle} />
-        <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
-          {({ TransitionProps, placement }) => (
-            <Grow
-              {...TransitionProps}
-              style={{ transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom' }}
-            >
-              <Paper>
-                <ClickAwayListener onClickAway={handleClose}>
-                  <MenuList autoFocusItem={open} id="menu-list-grow" onKeyDown={handleListKeyDown}>
-                    {props.data.map(item => menuItem(item))}
-                  </MenuList>
-                </ClickAwayListener>
-              </Paper>
-            </Grow>
-          )}
-        </Popper>
-      </div>
+      {props.icon === true ?
+        <IconButton
+          edge="end"
+          aria-haspopup="true"
+          onClick={handleClick}
+          color="inherit"
+        >
+          {props.buttonContent}
+        </IconButton>
+        :
+        <Button
+          id="basic-button"
+          // aria-contorls="drop-down-menu" // React complaining about incorrect aria-controls option
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          onClick={handleClick}
+        >
+          {props.buttonContent}
+        </Button>
+      }
+
+      <Menu
+        id="drop-down-menu"
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        getContentAnchorEl={null}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left'
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'left'
+        }}
+        MenuListProps={{
+          'aria-labelledby': 'basic-button',
+        }}
+      >
+        {props.data.map(item => menuItem(item))}
+
+      </Menu>
     </div>
   );
 }
