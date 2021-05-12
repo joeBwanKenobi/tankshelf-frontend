@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState } from 'react';
+import { SyntheticEvent, useState, useEffect } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -25,6 +25,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import EditButton from '../buttons/EditButton';
 import Plant from '../../constants/plant.interface';
 import Fish from '../../constants/fish.interface';
+import PlantContents from '../pages/createTank/PlantContents';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -113,9 +114,17 @@ export interface State {
 export interface Updates {
   images?: any[];
   description?: string;
+  plants?: Plant[];
+  inhabitants?: Fish[];
 }
 
-export default function TankDisplayEditor(props: Tank) {
+export interface TankUpdate extends Tank {
+  plantsList: Plant[] | [];
+
+}
+
+export default function TankDisplayEditor(props: TankUpdate) {
+
   const classes = useStyles();
   const ageInWeeks = props.age ? Math.round(Utils.ageInDays(props.age) / 7) : null;
 
@@ -136,8 +145,21 @@ export default function TankDisplayEditor(props: Tank) {
 
   const handleChange = (input: keyof State) => (e: SyntheticEvent) => {
     const target = e.target as HTMLInputElement;
-    setUpdates({...updates, [input]: target.value});
-}
+    setUpdates({ ...updates, [input]: target.value });
+  }
+
+  const addContents = (selectedContents: any) => {
+    if ('plants' in selectedContents) {
+      console.log('plants!')
+      console.log(selectedContents);
+      setUpdates({ plants: [...selectedContents.plants] });
+    }
+    if ('fish' in selectedContents) {
+      console.log('fish!')
+      console.log(selectedContents);
+      setUpdates({ inhabitants: [...selectedContents.fish] });
+    }
+  }
 
   // Creates Grid item for each tank object in list
   const displayImage = (image: any) => {
@@ -213,7 +235,12 @@ export default function TankDisplayEditor(props: Tank) {
             <Typography>
               Types of plants found in this tank:
             </Typography>
-            <PlantsList listOfPlants={props.plants} edit={inhabitantsEdit} />
+            { props.plants && props.plantsList ? 
+              <PlantContents addContents={addContents} plants={props.plants} plantsList={props.plantsList} />
+              :
+              ''
+            }
+            
           </div>
         }
 

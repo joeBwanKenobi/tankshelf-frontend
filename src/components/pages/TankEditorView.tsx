@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';
 import Plant from '../../constants/plant.interface';
 import Fish from '../../constants/fish.interface';
+import * as Utils from '../../utils/utils';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -26,9 +27,22 @@ export const TankEditorView = () => {
     const [tankImages, setTankImages] = useState<any[]>([]);
     const [plants, setPlants] = useState<Plant[]>();
     const [fish, setFish] = useState<Fish[]>();
+    // Populate possible plants and inhabitants
+    const [plantsList, setPlantsList] = useState<Plant[] | []>();
+    const [fishList, setFishList] = useState<Fish[]>();
     
     useEffect(() => {
         getTank();
+        // Call DB for list of freshwater plants
+        Utils.getPlants().then(res => {
+            setPlantsList(res);
+            console.log("plantsList set")
+        });
+        // Call DB for list of freshwater fish
+        Utils.getFish().then(res => {
+            setFishList(res);
+            console.log("fishList set")
+        });
     }, []);
 
     const getTank = async() => {
@@ -51,7 +65,6 @@ export const TankEditorView = () => {
         })
         .then(res => res.json())
         .then(res => {
-            console.log(res)
             setTankImages([...res]);
         }).catch(e => {
             console.error(e)
@@ -80,8 +93,11 @@ export const TankEditorView = () => {
         ...tankData,
         images: tankImages,
         plants: plants,
-        fish: fish
+        fish: fish,
+        plantsList: plantsList,
+        fishList: fishList
     }
+
     return(
         <main className={classes.mainContent}>
             <TankDisplayEditor {...props as any} />

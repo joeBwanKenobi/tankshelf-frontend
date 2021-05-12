@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const PlantContents = ({ addContents, values }: { addContents: Function, values: State }) => {
+const PlantContents = ({ addContents, plantsList, plants }: { addContents: Function, plantsList: Plant[], plants?: Plant[] }) => {
     const classes = useStyles();
     const [pattern, setPattern] = useState("");
     const [suggestions, setSuggestions] = useState<Fuse.FuseResult<Plant>[]>();
@@ -69,8 +69,8 @@ const PlantContents = ({ addContents, values }: { addContents: Function, values:
     // Set parent component state, fill with contents
     useEffect(() => {
         // If a user goes to another step from plants we want to populate plants already selected and stored in parent state
-        if (selected.length === 0 && values.plants != undefined) {
-            setSelected([...values.plants]);
+        if (selected.length === 0 && plants != undefined) {
+            setSelected([...plants]);
         }
 
         let contents = {
@@ -90,7 +90,7 @@ const PlantContents = ({ addContents, values }: { addContents: Function, values:
         ]
     }
     
-    const plantFuse = new Fuse(values.plantsList, options);
+    const plantFuse = new Fuse(plantsList, options);
 
     const handleSearch = (e: SyntheticEvent) => {
         const target = e.target as HTMLInputElement;
@@ -115,7 +115,7 @@ const PlantContents = ({ addContents, values }: { addContents: Function, values:
     }
 
     const populateSelections = (selection: any) => {
-        let res = values.plantsList.filter(plant => plant.plantID === selection.plantID)
+        let res = plantsList.filter(plant => plant.plantID === selection.plantID)
         return (
             <ListItem key={res[0].plantID} data-id={res[0].plantID} value={res[0].name != null ? res[0].name : ""} className={classes.contentTag}>
                 {res[0].name}
