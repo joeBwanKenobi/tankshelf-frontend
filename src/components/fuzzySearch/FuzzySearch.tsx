@@ -28,13 +28,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-export const FuzzySearch = ({listToSearch}: {listToSearch: any}) => {
+export const FuzzySearch = ({listToSearch, selectionCallback, label}: {listToSearch: any, selectionCallback: Function, label?: string}) => {
     const classes = useStyles();
 
     // Declare state variables
     const [pattern, setPattern] = useState("");
     const [suggestions, setSuggestions] = useState<Fuse.FuseResult<any>[]>();
-    const [selected, setSelected] = useState<any[]>([]);
     const [visible, setVisible] = useState<'visible' | 'hidden'>('hidden');
 
     // Options for Fuse fuzzy search
@@ -50,7 +49,8 @@ export const FuzzySearch = ({listToSearch}: {listToSearch: any}) => {
     const fuse = new Fuse(listToSearch, options);
 
     const handleSearch = (e: SyntheticEvent) => {
-        const target = e.target as HTMLInputElement;        
+        const target = e.target as HTMLInputElement;    
+        console.log(`handleSearch ${target.value}`)    
         if (target.value == "") {
             setPattern("");
         } else {
@@ -67,7 +67,7 @@ export const FuzzySearch = ({listToSearch}: {listToSearch: any}) => {
         const name = e.currentTarget.textContent
         const targetId = parseInt(e.currentTarget.getAttribute('data-id') as string)
         setVisible('hidden');
-        setSelected(selected => [...selected, { name: name, plantID: targetId }]);
+        selectionCallback((selected: any) => [...selected, { name: name, plantID: targetId }]);
     }
 
     const populateSuggestions = (suggestion: any) => {
@@ -77,14 +77,13 @@ export const FuzzySearch = ({listToSearch}: {listToSearch: any}) => {
                 {suggestion.item.name}
             </ListItem>
         )
-
     }
 
     return (
         <Fragment>
                 <TextField
-                    label="Plant Name"
-                    id="plantNameInput"
+                    label={`${label ? label : ""}`}
+                    id="FuzzyInput"
                     defaultValue=""
                     value={pattern}
                     onChange={handleSearch}

@@ -1,17 +1,11 @@
-import { ChangeEvent, SyntheticEvent, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Fuse from 'fuse.js';
-import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
-import ListItem, { ListItemProps } from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Divider from '@material-ui/core/Divider';
-import MenuItem from '@material-ui/core/MenuItem';
+import ListItem from '@material-ui/core/ListItem';
 import makeStyles from '@material-ui/styles/makeStyles';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
-import { State } from './CreateTankView';
 import Plant from '../../../constants/plant.interface';
-import Fish from '../../../constants/fish.interface';
 import FuzzySearch from '../../fuzzySearch/FuzzySearch';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexDirection: "column",
         width: '100%',
         flexWrap: "wrap",
-        height: "60vh",
+        // height: "60vh",
         overflow: "auto"
     },
     listItem: {
@@ -62,10 +56,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const PlantContents = ({ addContents, plantsList, plants }: { addContents: Function, plantsList: Plant[], plants?: Plant[] }) => {
     const classes = useStyles();
-    const [pattern, setPattern] = useState("");
-    const [suggestions, setSuggestions] = useState<Fuse.FuseResult<Plant>[]>();
     const [selected, setSelected] = useState<any[]>([]);
-    const [visible, setVisible] = useState<'visible' | 'hidden'>('hidden');
 
     // Set parent component state, fill with contents
     useEffect(() => {
@@ -73,7 +64,7 @@ const PlantContents = ({ addContents, plantsList, plants }: { addContents: Funct
         if (selected.length === 0 && plants != undefined) {
             setSelected([...plants]);
         }
-
+        // Populate object to add selected contents to tank in Parent state
         let contents = {
             plants: selected
         }
@@ -91,8 +82,6 @@ const PlantContents = ({ addContents, plantsList, plants }: { addContents: Funct
 
     return (
         <form className={classes.form}>
-
-
             <div>
                 <div>
                     <Typography variant="h5">
@@ -106,7 +95,7 @@ const PlantContents = ({ addContents, plantsList, plants }: { addContents: Funct
                 <Typography>
                     Search for types of plants in your tank.
                 </Typography>
-                <FuzzySearch listToSearch={plantsList} />
+                <FuzzySearch listToSearch={plantsList} selectionCallback={setSelected} label={"Plant Type"}  />
             </div>
         </form>
     )
