@@ -12,6 +12,7 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { State } from './CreateTankView';
 import Plant from '../../../constants/plant.interface';
 import Fish from '../../../constants/fish.interface';
+import FuzzySearch from '../../fuzzySearch/FuzzySearch';
 
 const useStyles = makeStyles((theme: Theme) => ({
     form: {
@@ -79,41 +80,6 @@ const PlantContents = ({ addContents, plantsList, plants }: { addContents: Funct
         addContents(contents);
     },[selected])
 
-    
-    // Options for Fuse fuzzy search
-    const options = {
-        minMatchCharLength: 2,
-        threshold: 0.3,
-        keys: [
-            "name",
-            "common_name"
-        ]
-    }
-    
-    const plantFuse = new Fuse(plantsList, options);
-
-    const handleSearch = (e: SyntheticEvent) => {
-        const target = e.target as HTMLInputElement;
-        if (target.value == "") {
-            setPattern("");
-        } else {
-            setPattern(target.value);
-            setVisible('visible');
-
-            const plants = plantFuse.search(pattern);
-            setSuggestions(plants);
-        }
-    }
-
-    const populateSuggestions = (suggestion: any) => {
-        return (
-            <ListItem key={suggestion.item.plantID} data-id={suggestion.item.plantID} value={suggestion.item.name != null ? suggestion.item.name : ""} className={classes.listItem} onClick={valueSelected}>
-                {suggestion.item.name}
-            </ListItem>
-        )
-
-    }
-
     const populateSelections = (selection: any) => {
         let res = plantsList.filter(plant => plant.plantID === selection.plantID)
         return (
@@ -121,14 +87,6 @@ const PlantContents = ({ addContents, plantsList, plants }: { addContents: Funct
                 {res[0].name}
             </ListItem>
         )
-    }
-
-
-    const valueSelected = (e: SyntheticEvent) => {
-        const name = e.currentTarget.textContent
-        const targetId = parseInt(e.currentTarget.getAttribute('data-id') as string)
-        setVisible('hidden');
-        setSelected(selected => [...selected, { name: name, plantID: targetId }]);
     }
 
     return (
@@ -148,20 +106,7 @@ const PlantContents = ({ addContents, plantsList, plants }: { addContents: Funct
                 <Typography>
                     Search for types of plants in your tank.
                 </Typography>
-                <TextField
-                    label="Plant Name"
-                    id="plantNameInput"
-                    defaultValue=""
-                    value={pattern}
-                    onChange={handleSearch}
-                    variant="outlined"
-                    fullWidth
-                    className={classes.typeControl}
-                    onFocus={() => setVisible('visible')}
-                />
-                <List component="ul" className={classes.plantList} style={{ visibility: visible }}>
-                    {suggestions != undefined ? suggestions.map((s: any) => populateSuggestions(s)) : ""}
-                </List>
+                <FuzzySearch listToSearch={plantsList} />
             </div>
         </form>
     )

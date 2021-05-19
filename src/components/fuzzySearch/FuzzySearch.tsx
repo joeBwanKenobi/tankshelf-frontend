@@ -1,4 +1,6 @@
 import { useEffect, useState, Fragment, SyntheticEvent } from 'react';
+import makeStyles from '@material-ui/styles/makeStyles';
+import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import Fuse from 'fuse.js';
 import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
@@ -6,8 +8,29 @@ import ListItem from '@material-ui/core/ListItem';
 import TextField from '@material-ui/core/TextField';
 import Plant from '../../constants/plant.interface';
 
+const useStyles = makeStyles((theme: Theme) => ({
+    typeControl: {
+        margin: theme.spacing(2, 0, 2, 0)
+    },
+    plantList: {
+        flexDirection: "column",
+        width: '100%',
+        flexWrap: "wrap",
+        height: "60vh",
+        overflow: "auto"
+    },
+    listItem: {
+        background: "white",
+        color: 'black',
+        height: theme.spacing(6),
+        width: "100%",
+        borderBottom: 'black 1px solid'
+    },
+}));
 
-export const FuzzySearch = (listToSearch: any) => {
+export const FuzzySearch = ({listToSearch}: {listToSearch: any}) => {
+    const classes = useStyles();
+
     // Declare state variables
     const [pattern, setPattern] = useState("");
     const [suggestions, setSuggestions] = useState<Fuse.FuseResult<any>[]>();
@@ -27,10 +50,11 @@ export const FuzzySearch = (listToSearch: any) => {
     const fuse = new Fuse(listToSearch, options);
 
     const handleSearch = (e: SyntheticEvent) => {
-        const target = e.target as HTMLInputElement;
+        const target = e.target as HTMLInputElement;        
         if (target.value == "") {
             setPattern("");
         } else {
+            console.log(target.value);
             setPattern(target.value);
             setVisible('visible');
 
@@ -39,9 +63,17 @@ export const FuzzySearch = (listToSearch: any) => {
         }
     }
 
+    const valueSelected = (e: SyntheticEvent) => {
+        const name = e.currentTarget.textContent
+        const targetId = parseInt(e.currentTarget.getAttribute('data-id') as string)
+        setVisible('hidden');
+        setSelected(selected => [...selected, { name: name, plantID: targetId }]);
+    }
+
     const populateSuggestions = (suggestion: any) => {
         return (
-            <ListItem key={suggestion.item.plantID} data-id={suggestion.item.plantID} value={suggestion.item.name != null ? suggestion.item.name : ""} className={classes.listItem} onClick={valueSelected}>
+            <ListItem key={suggestion.item.plantID} data-id={suggestion.item.plantID} value={suggestion.item.name != null ? suggestion.item.name : ""} 
+            className={classes.listItem} onClick={valueSelected}>
                 {suggestion.item.name}
             </ListItem>
         )
@@ -50,9 +82,6 @@ export const FuzzySearch = (listToSearch: any) => {
 
     return (
         <Fragment>
-            <Typography>
-                    Search for types of plants in your tank.
-                </Typography>
                 <TextField
                     label="Plant Name"
                     id="plantNameInput"
