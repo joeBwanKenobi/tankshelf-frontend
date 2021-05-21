@@ -1,12 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import CardHeader from '@material-ui/core/CardHeader';
 import Divider from '@material-ui/core/Divider';
 import Avatar from '@material-ui/core/Avatar';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import IconButton from '@material-ui/core/IconButton';
 import Typography from '@material-ui/core/Typography';
 import { red } from '@material-ui/core/colors';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -20,6 +17,7 @@ import PlantsList from '../plants/PlantsList';
 import FishList from '../fish/FishList';
 import DrowDownMenu from '../menus/DropDownMenu';
 import Paper from '@material-ui/core/Paper';
+import AuthContext from '../contexts/auth/AuthContext';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -80,10 +78,10 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export default function TankDisplay(props: Tank) {
   const classes = useStyles();
-  const [expanded, setExpanded] = React.useState(false);
-  // Set anchor elements for opening menus
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const { isLoggedIn } = useContext(AuthContext);
   const ageInWeeks = props.age ? Math.round(Utils.ageInDays(props.age) / 7) : null;
+
 
   // Creates Grid item for each tank object in list
   const displayImage = (image: any) => {
@@ -111,7 +109,7 @@ export default function TankDisplay(props: Tank) {
 
 
   const menuItems = [
-    { label: 'Edit', url: '/tank/edit' }
+    { label: 'Edit', url: `/tank/edit/${props.tankID}` }
   ];
 
   return (
@@ -124,7 +122,7 @@ export default function TankDisplay(props: Tank) {
           avatar={
             <Avatar src="/broken-image.jpg" />
           }
-          action={
+          action={ isLoggedIn &&
             <DrowDownMenu data={menuItems} buttonContent={<MoreVertIcon />} icon={true} />
           }
           title={props.name}

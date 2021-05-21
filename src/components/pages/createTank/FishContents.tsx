@@ -12,6 +12,7 @@ import { Theme } from '@material-ui/core/styles/createMuiTheme';
 import { State } from './CreateTankView';
 import Plant from '../../../constants/plant.interface';
 import Fish from '../../../constants/fish.interface';
+import FuzzySearch from '../../fuzzySearch/FuzzySearch';
 
 const useStyles = makeStyles((theme: Theme) => ({
     form: {
@@ -61,91 +62,29 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const FishContents = ({ addContents, values }: { addContents: Function, values: State }) => {
     const classes = useStyles();
-    const [pattern, setPattern] = useState("");
-    const [suggestions, setSuggestions] = useState<(Fuse.FuseResult<Fish>)[]>();
     const [selected, setSelected] = useState<any[]>([]);
-    const [visible, setVisible] = useState<'visible' | 'hidden'>('hidden');
 
     // Set parent component state, fill with contents
     useEffect(() => {
-        console.log(selected);
-        
         // If a user goes to another step from fish we want to populate fish already selected and stored in parent state
         if (selected.length === 0 && values.inhabitants != undefined) {
             setSelected([...values.inhabitants]);
         }
-
         let contents = {
             fish: selected
         }
         addContents(contents);
+        
     },[selected])
 
-    // Options for Fuse fuzzy search
-    const options = {
-        minMatchCharLength: 2,
-        threshold: 0.3,
-        keys: [
-            "name",
-            "common_name"
-        ]
-    }
-
-    // Create Fuse object to use for fuzzy search
-    const fishFuse = new Fuse(values.fishList, options);
-
-    const handleSearch = (e: SyntheticEvent) => {
-        const target = e.target as HTMLInputElement;
-        if (target.value == "") {
-            setPattern("");
-        } else {
-            setPattern(target.value);
-            setVisible('visible');
-
-            const fish = fishFuse.search(pattern);
-            setSuggestions(fish);
-
-        }
-    }
-
-    const handleFocusOut = (e: SyntheticEvent) => {
-        // setTimeout(() => {
-        //     setVisible('hidden');
-        //     setPattern("");
-        //     setSuggestions([]);
-        // }, 500);
-
-        setVisible('hidden');
-        setPattern("");
-        setSuggestions([]);
-
-    }
-
-    const populateSuggestions = (suggestion: any) => {
-        return (
-            <ListItem key={suggestion.item.fishID} data-id={suggestion.item.fishID} value={suggestion.item.name != null ? suggestion.item.name : ""} className={classes.listItem} onClick={valueSelected}>
-                {suggestion.item.common_name} ({suggestion.item.name})
-            </ListItem>
-        )
-
-    }
-
     const populateSelections = (selection: any) => {
-        let res = values.fishList.filter(plant => plant.fishID === selection.fishID)
+        let res = values.fishList.filter(fish => fish.id === selection.id)
         let displayName = res[0].common_name !== "" ? `${res[0].common_name} (${res[0].name})` : res[0].name;
         return (
-            <ListItem key={res[0].fishID} data-id={res[0].fishID} value={res[0].name != null ? res[0].name : ""} className={classes.contentTag}>
+            <ListItem key={res[0].id} data-id={res[0].id} value={res[0].name != null ? res[0].name : ""} className={classes.contentTag}>
                 {displayName}
             </ListItem>
         )
-    }
-
-    const valueSelected = (e: SyntheticEvent) => {
-        console.log('valueSelected')
-        const name = e.currentTarget.textContent
-        const targetId = parseInt(e.currentTarget.getAttribute('data-id') as string)
-        setVisible('hidden');
-        setSelected(selected => [...selected, { name: name, fishID: targetId }]);
     }
 
     return (
@@ -162,20 +101,7 @@ const FishContents = ({ addContents, values }: { addContents: Function, values: 
                 <Typography>
                     Search types of fish in your tank.
                 </Typography>
-                <TextField
-                    label="Fish Name"
-                    id="fishNameInput"
-                    defaultValue=""
-                    value={pattern}
-                    onChange={handleSearch}
-                    variant="outlined"
-                    fullWidth
-                    className={classes.typeControl}
-                    onFocus={() => setVisible('visible')}
-                />
-                <List component="ul" className={classes.fishList} style={{ visibility: visible }}>
-                    {suggestions != undefined ? suggestions.map((s: any) => populateSuggestions(s)) : ""}
-                </List>
+                <FuzzySearch listToSearch={values.fishList} selectionCallback={setSelected} label={"Fish Type"} />
             </div>
         </form>
     )

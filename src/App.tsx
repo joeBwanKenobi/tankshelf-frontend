@@ -4,6 +4,7 @@ import './App.css';
 import { Layout } from './layouts/Layout';
 import { TanksGrid } from './components/pages/TanksGridView';
 import { TankSingleView } from './components/pages/TankSingleView';
+import { TankEditorView } from './components/pages/TankEditorView';
 import { ProfileView } from './components/pages/ProfileView';
 import SignUp from './components/pages/SignUp';
 import Login from './components/pages/Login';
@@ -67,6 +68,9 @@ function App() {
             <Route exact path="/login" children={<Login />} />
             <ProtectedRoute path="/tanks/create" isLoggedIn={loggedIn} >
               <CreateTankView />
+            </ProtectedRoute>
+            <ProtectedRoute path="/tank/edit/:tankId" isLoggedIn={loggedIn} >
+              <TankEditorView />
             </ProtectedRoute>
             <ProtectedRoute path="/user/profile" isLoggedIn={loggedIn} >
               <ProfileView />

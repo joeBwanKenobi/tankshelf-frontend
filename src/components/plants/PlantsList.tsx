@@ -3,6 +3,8 @@ import ListItem from "@material-ui/core/ListItem";
 import Link from "@material-ui/core/Link";
 import Plant from "../../constants/plant.interface";
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
+import ButtonBase from '@material-ui/core/ButtonBase';
 
 const useStyles = makeStyles((theme: Theme) => ({
     link: {
@@ -21,19 +23,29 @@ const useStyles = makeStyles((theme: Theme) => ({
         '&:hover': {
             background: "#1f5834"
         }
+    },
+    editTag: {
+        '&:hover': {
+            background: "#b2102f"
+        }
     }
 }));
 
-const PlantsList = (props: { listOfPlants: Plant[] }) => {
+const PlantsList = (props: { listOfPlants: Plant[], edit?: boolean }) => {
     const classes = useStyles();
 
     const displayPlant = (plantObject: any) => {
         return (
-            <ListItem key={plantObject.name}  className={classes.contentTag}  >
-                <Link key={plantObject.name} href={plantObject.url} target="_blank" className={classes.link}  >
-                    {plantObject.common_name ? `${plantObject.common_name} (${plantObject.name})` : plantObject.name}
-                </Link>
-            </ListItem>
+                <ListItem key={plantObject.name} className={`${classes.contentTag} ${props.edit ? classes.editTag : ""}`}>
+                    { props.edit &&
+                        <ButtonBase>
+                            <RemoveCircleIcon />
+                        </ButtonBase>
+                    }
+                    <Link href={ props.edit ? null : plantObject.url} target="_blank" className={classes.link}  >
+                        {plantObject.common_name ? `${plantObject.common_name} (${plantObject.name})` : plantObject.name}
+                    </Link>
+                </ListItem>
         )
     }
 

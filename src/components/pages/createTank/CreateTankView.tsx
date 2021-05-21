@@ -196,7 +196,7 @@ class CreateTankView extends Component<Props, State> {
             case 1:
                 return <FishContents addContents={this.addContents} values={values} />;
             case 2:
-                return <PlantContents addContents={this.addContents} values={values} />;
+                return <PlantContents addContents={this.addContents} plantsList={values.plantsList} plants={values.plants} />;
             case 3:
                 return <TankMedia handleImageAdd={this.handleImageAdd} values={values} />;  
         }
