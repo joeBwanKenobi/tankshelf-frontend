@@ -66,25 +66,22 @@ const FishContents = ({ addContents, values }: { addContents: Function, values: 
 
     // Set parent component state, fill with contents
     useEffect(() => {
-        console.log(selected);
-        
         // If a user goes to another step from fish we want to populate fish already selected and stored in parent state
         if (selected.length === 0 && values.inhabitants != undefined) {
             setSelected([...values.inhabitants]);
         }
-
         let contents = {
             fish: selected
         }
         addContents(contents);
+        
     },[selected])
 
     const populateSelections = (selection: any) => {
-        console.log(selection)
-        let res = values.fishList.filter(fish => fish.fishID === selection.fishID)
+        let res = values.fishList.filter(fish => fish.id === selection.id)
         let displayName = res[0].common_name !== "" ? `${res[0].common_name} (${res[0].name})` : res[0].name;
         return (
-            <ListItem key={res[0].fishID} data-id={res[0].fishID} value={res[0].name != null ? res[0].name : ""} className={classes.contentTag}>
+            <ListItem key={res[0].id} data-id={res[0].id} value={res[0].name != null ? res[0].name : ""} className={classes.contentTag}>
                 {displayName}
             </ListItem>
         )

@@ -49,12 +49,10 @@ export const FuzzySearch = ({listToSearch, selectionCallback, label}: {listToSea
     const fuse = new Fuse(listToSearch, options);
 
     const handleSearch = (e: SyntheticEvent) => {
-        const target = e.target as HTMLInputElement;    
-        console.log(`handleSearch ${target.value}`)    
+        const target = e.target as HTMLInputElement;  
         if (target.value == "") {
             setPattern("");
         } else {
-            console.log(target.value);
             setPattern(target.value);
             setVisible('visible');
 
@@ -67,14 +65,14 @@ export const FuzzySearch = ({listToSearch, selectionCallback, label}: {listToSea
         const name = e.currentTarget.textContent
         const targetId = parseInt(e.currentTarget.getAttribute('data-id') as string)
         setVisible('hidden');
-        selectionCallback((selected: any) => [...selected, { name: name, plantID: targetId }]);
+        selectionCallback((selected: any) => [...selected, { name: name, id: targetId }]);
     }
 
     const populateSuggestions = (suggestion: any) => {
         return (
-            <ListItem key={suggestion.item.plantID} data-id={suggestion.item.plantID} value={suggestion.item.name != null ? suggestion.item.name : ""} 
+            <ListItem key={suggestion.item.id} data-id={suggestion.item.id} value={suggestion.item.name != null ? suggestion.item.name : ""} 
             className={classes.listItem} onClick={valueSelected}>
-                {suggestion.item.name}
+                {suggestion.item.name} {suggestion.item.common_name && ` (${suggestion.item.common_name})`}
             </ListItem>
         )
     }

@@ -72,9 +72,9 @@ const PlantContents = ({ addContents, plantsList, plants }: { addContents: Funct
     },[selected])
 
     const populateSelections = (selection: any) => {
-        let res = plantsList.filter(plant => plant.plantID === selection.plantID)
+        let res = plantsList.filter(plant => plant.id === selection.id)        
         return (
-            <ListItem key={res[0].plantID} data-id={res[0].plantID} value={res[0].name != null ? res[0].name : ""} className={classes.contentTag}>
+            <ListItem key={res[0].id} data-id={res[0].id} value={res[0].name != null ? res[0].name : ""} className={classes.contentTag}>
                 {res[0].name}
             </ListItem>
         )
