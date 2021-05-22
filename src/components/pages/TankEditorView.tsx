@@ -5,6 +5,7 @@ import { useParams } from 'react-router-dom';
 import Plant from '../../constants/plant.interface';
 import Fish from '../../constants/fish.interface';
 import * as Utils from '../../utils/utils';
+import Paper from '@material-ui/core/Paper';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -13,7 +14,10 @@ const useStyles = makeStyles((theme) => ({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center'
-    }
+    },
+    stepperContainer: {
+        padding: theme.spacing(4, 4, 4)
+    },
 }));
 
 export const TankEditorView = () => {
@@ -30,7 +34,7 @@ export const TankEditorView = () => {
     // Populate possible plants and inhabitants
     const [plantsList, setPlantsList] = useState<Plant[] | []>();
     const [fishList, setFishList] = useState<Fish[]>();
-    
+
     useEffect(() => {
         getTank();
         // Call DB for list of freshwater plants
@@ -45,48 +49,48 @@ export const TankEditorView = () => {
         });
     }, []);
 
-    const getTank = async() => {
+    const getTank = async () => {
         fetch(API_URL)
-        .then(res => res.json())
-        .then(res => {
-            setTankData(res);
-        }).then(() => {
-            getImages();
-            getContents();
-        })
-        .catch(e => console.error(e));
+            .then(res => res.json())
+            .then(res => {
+                setTankData(res);
+            }).then(() => {
+                getImages();
+                getContents();
+            })
+            .catch(e => console.error(e));
     }
 
-    const getImages = async() => {
+    const getImages = async () => {
         fetch(IMAGES_API_URL, {
             headers: {
                 'Content-Type': 'application/json'
             }
         })
-        .then(res => res.json())
-        .then(res => {
-            setTankImages([...res]);
-        }).catch(e => {
-            console.error(e)
-        });
+            .then(res => res.json())
+            .then(res => {
+                setTankImages([...res]);
+            }).catch(e => {
+                console.error(e)
+            });
     }
 
-    const getContents = async() => {
+    const getContents = async () => {
         // get plants related to this tank
         fetch(`${process.env.REACT_APP_API_BASE_URL}/api/plants/tank/${id}`)
-        .then(res => res.json())
-        .then(res => {
-            setPlants([...res]);
-        }).catch(e => console.error(e));
-        
+            .then(res => res.json())
+            .then(res => {
+                setPlants([...res]);
+            }).catch(e => console.error(e));
+
         // get fish related to this tank
         fetch(`${process.env.REACT_APP_API_BASE_URL}/api/fish/tank/${id}`)
-        .then(res => res.json())
-        .then(res => {
-            setFish([...res]);
-        }).catch(e => console.error(e));
+            .then(res => res.json())
+            .then(res => {
+                setFish([...res]);
+            }).catch(e => console.error(e));
     }
-    
+
     const classes = useStyles();
 
     const props = {
@@ -98,9 +102,11 @@ export const TankEditorView = () => {
         fishList: fishList
     }
 
-    return(
+    return (
         <main className={classes.mainContent}>
-            <TankDisplayEditor {...props as any} />
+            <Paper className={classes.stepperContainer}>
+                <TankDisplayEditor {...props as any} />
+            </Paper>
         </main>
     )
 }

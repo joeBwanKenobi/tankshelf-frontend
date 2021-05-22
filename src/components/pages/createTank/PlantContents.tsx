@@ -5,6 +5,8 @@ import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import makeStyles from '@material-ui/styles/makeStyles';
 import { Theme } from '@material-ui/core/styles/createMuiTheme';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import Plant from '../../../constants/plant.interface';
 import FuzzySearch from '../../fuzzySearch/FuzzySearch';
 
@@ -51,10 +53,19 @@ const useStyles = makeStyles((theme: Theme) => ({
         background: "#303030",
         width: 'auto',
         borderRadius: '25px',
-    }
+    },
+    removeButton: {
+        background: '#b2102f',
+        position: 'relative',
+        bottom: '95%',
+        left: '14px',
+        '&:hover': {
+          background: '#ff1744'
+        }
+      }
 }));
 
-const PlantContents = ({ addContents, plantsList, plants }: { addContents: Function, plantsList: Plant[], plants?: Plant[] }) => {
+const PlantContents = ({ addContents, plantsList, plants, editing }: { addContents: Function, plantsList: Plant[], plants?: Plant[], editing?: boolean }) => {
     const classes = useStyles();
     const [selected, setSelected] = useState<any[]>([]);
 
@@ -69,12 +80,17 @@ const PlantContents = ({ addContents, plantsList, plants }: { addContents: Funct
             plants: selected
         }
         addContents(contents);
-    },[selected])
+    }, [selected])
 
     const populateSelections = (selection: any) => {
-        let res = plantsList.filter(plant => plant.id === selection.id)        
+        let res = plantsList.filter(plant => plant.id === selection.id)
         return (
             <ListItem key={res[0].id} data-id={res[0].id} value={res[0].name != null ? res[0].name : ""} className={classes.contentTag}>
+                {editing &&
+                    <IconButton size="small" className={classes.removeButton} onClick={() => console.log('plant delete clicked')}>
+                        <CloseIcon fontSize="small" />
+                    </IconButton>
+                }
                 {res[0].name}
             </ListItem>
         )
@@ -95,7 +111,7 @@ const PlantContents = ({ addContents, plantsList, plants }: { addContents: Funct
                 <Typography>
                     Search for types of plants in your tank.
                 </Typography>
-                <FuzzySearch listToSearch={plantsList} selectionCallback={setSelected} label={"Plant Type"}  />
+                <FuzzySearch listToSearch={plantsList} selectionCallback={setSelected} label={"Plant Type"} />
             </div>
         </form>
     )

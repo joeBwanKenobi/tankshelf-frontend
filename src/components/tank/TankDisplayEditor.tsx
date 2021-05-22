@@ -1,4 +1,4 @@
-import { SyntheticEvent, useState, useEffect } from 'react';
+import { SyntheticEvent, useState } from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -7,25 +7,15 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { red } from '@material-ui/core/colors';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import ShareIcon from '@material-ui/icons/Share';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Tank } from '../../constants/tank.interface';
-import { Button, Icon, ListItemText } from '@material-ui/core';
-import VideoPlayer from '../media/VideoPlayer';
 import * as Utils from '../../utils/utils';
-import PlantsList from '../plants/PlantsList';
-import FishList from '../fish/FishList';
-import DrowDownMenu from '../menus/DropDownMenu';
-import Paper from '@material-ui/core/Paper';
-import AuthContext from '../contexts/auth/AuthContext';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
 import CloseIcon from '@material-ui/icons/Close';
 import EditButton from '../buttons/EditButton';
 import Plant from '../../constants/plant.interface';
 import Fish from '../../constants/fish.interface';
 import PlantContents from '../pages/createTank/PlantContents';
+import BubbleList from '../lists/BubbleList';
 
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -236,7 +226,7 @@ export default function TankDisplayEditor(props: TankUpdate) {
               Types of plants found in this tank:
             </Typography>
             { props.plants && props.plantsList ? 
-              <PlantContents addContents={addContents} plants={props.plants} plantsList={props.plantsList} />
+              <PlantContents addContents={addContents} plants={props.plants} plantsList={props.plantsList} editing={inhabitantsEdit} />
               :
               ''
             }
@@ -249,7 +239,7 @@ export default function TankDisplayEditor(props: TankUpdate) {
             <Typography>
               Types of fish found in this tank:
             </Typography>
-            <FishList listOfFish={props.fish} />
+            <BubbleList list={props.fish} />
           </div>
         }
 
