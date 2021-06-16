@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
         flexDirection: "column",
         width: '100%',
         flexWrap: "wrap",
-        height: "60vh",
+        // height: "60vh",
         overflow: "auto"
     },
     listItem: {
